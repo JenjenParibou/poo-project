@@ -1,5 +1,6 @@
 package main;
 import java.util.Scanner;
+import map.*; //imports all map related classes, use it for other packages like troops, exp...
 
 public class Main {
 	
