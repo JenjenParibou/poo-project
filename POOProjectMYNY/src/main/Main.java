@@ -9,7 +9,7 @@ public class Main {
 		game();//
 	}
 	
-	static public void logo() {
+	static public void logo() {// this sucks
 		System.out.println(" __  ____     ___   ___     __  _____           _           _     ");
 		System.out.println("|  \\/  \\ \\   / / \\ | \\ \\   / / |  __ \\         (_)         | |    "); 
 		System.out.println("| \\  / |\\ \\_/ /|  \\| |\\ \\_/ /  | |__) | __ ___  _  ___  ___| |_   ");
