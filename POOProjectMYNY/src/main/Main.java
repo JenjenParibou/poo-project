@@ -5,7 +5,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		titleScreen(); //procedure that contains what happens on the title screen
-		game();
+		game();//
 	}
 	
 	static public void logo() {
