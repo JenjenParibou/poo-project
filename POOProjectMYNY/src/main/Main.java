@@ -39,7 +39,7 @@ public class Main {
 			game();
 			break;
 		case 2:
-			game();
+			game();// I blame VIDEO GAMES
 			break;
 		case 3:
 			print("See you later!");
