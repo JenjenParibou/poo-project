@@ -1,4 +1,4 @@
-
+- Maybe have it so that you can only have buildings in an area if you have basic units on that area
 
 
 - Maybe have terrain type affect how many ressources you get from that case
@@ -19,11 +19,12 @@ So it would go
 			Mine
 			Other
 			
-- Perhaps the command center gives you access to more tiles to build units to
+- Possible loss condition: Command center getting destroyed
 
-- Have money being generated periodically, letting you build building, buildings will give
-you ressources that lets you have units, units can travel far to build other buildings, more
+- Basic gameplay loop: Have money being generated periodically, letting you build building, buildings 
+will give you ressources that lets you have units, units can travel far to build other buildings, more
 buildings = more money generated
 
+- Perhaps you
 
 -Not sure how fights are gonna be like
