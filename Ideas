@@ -1,0 +1,29 @@
+
+
+
+- Maybe have terrain type affect how many ressources you get from that case
+For example getting more ores from mountain areas but less food, or getting more food
+from areas with water but less ores
+
+
+- Batiment is an abstract class that all other buildings inherit from, perhaps
+buildings that produce ressources should inherit from another abstract class
+(This would help my previous idea)
+
+So it would go
+	Batiment
+		Command Center 
+		Training Ground
+		Batiment Ressources
+			Farm
+			Mine
+			Other
+			
+- Perhaps the command center gives you access to more tiles to build units to
+
+- Have money being generated periodically, letting you build building, buildings will give
+you ressources that lets you have units, units can travel far to build other buildings, more
+buildings = more money generated
+
+
+-Not sure how fights are gonna be like
