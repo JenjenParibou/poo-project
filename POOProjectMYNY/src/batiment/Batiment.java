@@ -1,6 +1,7 @@
 package batiment;
+import map.Element;
 
-public abstract class Batiment {
+public abstract class Batiment implements Element {
 	int cost;
 	int buildTime;
 	
