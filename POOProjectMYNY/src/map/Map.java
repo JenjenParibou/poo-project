@@ -7,7 +7,7 @@ public class Map {
 	final int MAX_CASES = 51; // Must be an odd number
 	final int CENTER = (MAX_CASES - 1) / 2; // or 26 in algorithmic language
 	Terrain[][] Grid = new Terrain[MAX_CASES][MAX_CASES];// array[n*n] of Terrain
-	int visibleGrid = 1; // how many cells are visibile around the center
+	int visibleGrid = 2; // how many cells are visibile around the center
 	// will grow every level to signify you taking areas
 	
 	public Map() {	
@@ -21,7 +21,7 @@ public class Map {
 	// the array (as in, its center)
 	
 	public Terrain getTileFromCenter(int xPos, int yPos) { // so user can type (-1,0) instead of (24, 25)
-		return (Grid[xPos + CENTER][yPos + CENTER]);
+		return (Grid[yPos + CENTER][xPos + CENTER]);
 	}
 	
 	public void generateMap() {// randomly generate all tiles
