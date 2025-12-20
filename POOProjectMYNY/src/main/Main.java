@@ -5,7 +5,7 @@ import map.*; //imports all map related classes, use it for other packages like 
 public class Main {
 	
 	public static void main(String[] args) {
-		//titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
+		titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
 		game();//will start the game
 	}
 	
