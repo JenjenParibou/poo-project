@@ -9,6 +9,7 @@ public class Soldat extends Unit {
         this.range = 1; //range is how many tiles the enemy has to be away to be attacked
         this.cost = 50; //this'll be changed according to yudas's work on economy
         this.type = "Soldat";
+        this.aerial = false;
     }
 
 }
