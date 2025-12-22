@@ -93,7 +93,7 @@ public class Terrain { //each cell of the grid is a terrain
 		possibleTypes.clear();
 		
 	}
-	
+	public String getType() { return type;}
 	public void buildBuilding(Batiment batiment) {
 		if (currentElement.isEmpty()) { // can only have 1 element in list
 			currentElement.add(batiment);
