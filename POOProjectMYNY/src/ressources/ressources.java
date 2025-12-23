@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ressources {
 
-    static public Map<String, Integer> currentRessources=new HashMap<>();
+    static public Map<String, Integer> currentRessources=new HashMap<>();//
 
 
 
