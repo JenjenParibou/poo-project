@@ -49,24 +49,15 @@ public class Terrain { //each cell of the grid is a terrain
 	
 	
 	
-	public void setIcon(String faction) {
-		switch(currentElement.getFirst().type) {
-			case("Soldat"):
-				icon = faction + "S" + ConsoleColors.RESET;
-				break;
-			case("Mountain"):
-				icon = "ʌ";
-				break;
-			case("Desert"):
-				icon = ConsoleColors.YELLOW_BOLD + "☼" + ConsoleColors.RESET;
-				break;
-			case("Water"):
-				icon = ConsoleColors.CYAN + "x" + ConsoleColors.RESET;	
-				break;
-			default:
-				icon = " ";
-		}
-	}
+//	public void setIcon(String faction) {
+//		switch(currentElement.getFirst().type) {
+//			case("Soldat"):
+//				icon = faction + "S" + ConsoleColors.RESET;
+//				break;
+//			default:
+//				icon = " ";
+//		}
+//	}
 	
 	
 	
@@ -104,9 +95,14 @@ public class Terrain { //each cell of the grid is a terrain
 		if (currentElement.isEmpty()) { // can only have 1 element in list
 			currentElement.add(elem);
 			faction = placerFaction;
+			
 			if (placerFaction == 1) {
-				setIcon(ConsoleColors.GREEN);
-			} else setIcon(ConsoleColors.RED);
+				icon = ConsoleColors.RESET +currentElement.getFirst().icon;
+				//setIcon(ConsoleColors.GREEN);
+			} else {
+				//setIcon(ConsoleColors.RED);
+				icon = ConsoleColors.RED +currentElement.getFirst().icon + currentElement.getFirst().icon;
+			}
 			
 		} else 
 			System.out.println("Space is already occupied.");
@@ -115,7 +111,8 @@ public class Terrain { //each cell of the grid is a terrain
 	public void removeElement() {
 		if (!currentElement.isEmpty() ) {
 			currentElement.remove(0);
-			setIcon("");
+			icon = " ";
+			//setIcon("");
 			faction = 0;
 		}
 	}

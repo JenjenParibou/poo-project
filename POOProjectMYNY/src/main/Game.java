@@ -30,6 +30,8 @@ public class Game {
 		case("map"):
 			Map.getMap();
 			return false;
+		case("build"):
+			
 		default:
 			System.out.println("Unknown command. Perhaps you've typed it in lowercase?");
 			return false;

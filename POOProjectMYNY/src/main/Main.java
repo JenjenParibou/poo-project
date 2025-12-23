@@ -47,26 +47,28 @@ public class Main {
 		
 		String commande;//the input from the player
 		boolean advancer;
+		boolean gameOver = false;
 		
 		int turnsBeforeFight = 10; //turns before enemies spawn
-		
-		while (turnsBeforeFight > 0) {
-			print("What will you do?");
-			
-			commande = sc.next();//get input from player
-			advancer = Game.command(commande);//the game class will output accordingly
-			//advancer will be set to true if the player's input is a turn ending action, for example placing a building
-			//advancer will be set to false if the player's input isn't a turn ending action, for example viewing the map
-			if(advancer) {
-				turnsBeforeFight--;
-				turnActions();
-				//actions that are taken at the end of a turn, i.e generating gold
-				}
+		while(!gameOver){
+			while (turnsBeforeFight > 0) {
+				print("What will you do?");
+				
+				commande = sc.next();//get input from player
+				advancer = Game.command(commande);//the game class will output accordingly
+				//advancer will be set to true if the player's input is a turn ending action, for example placing a building
+				//advancer will be set to false if the player's input isn't a turn ending action, for example viewing the map
+				if(advancer) {
+					turnsBeforeFight--;
+					turnActions();
+					//actions that are taken at the end of a turn, i.e generating gold
+					}
+			}
 		}
-		
 	}
 	
 	 static public void turnActions(){
+		 
 		//stuff
 	}
 	

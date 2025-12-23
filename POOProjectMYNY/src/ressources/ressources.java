@@ -5,9 +5,8 @@ import java.util.Map;
 
 public class ressources {
 
-    static public Map<String, Integer> currentRessources=new HashMap<>();
 
-
+    static public Map<String, Integer> currentRessources= new HashMap<>();
 
     static public void addRessources() { // adds all ressources, put it at the start of main
         currentRessources.put("Wood",150);
