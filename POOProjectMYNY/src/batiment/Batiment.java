@@ -5,7 +5,7 @@ import java.util.Scanner;
 public abstract class Batiment implements Element { //implementing Element interface, will be used later for functions??
 	//idk if every building has hp or no, i can just take it out and add it where its needed
 	public int cost, buildTime, hp;
-	String name; //idk abt this one
+	Scanner sc= new Scanner(System.in);
 	
 	//getters and setters
 	
@@ -31,14 +31,6 @@ public abstract class Batiment implements Element { //implementing Element inter
 
 	public void setHp(int hp) {
 		this.hp = hp;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public abstract void function(); 
