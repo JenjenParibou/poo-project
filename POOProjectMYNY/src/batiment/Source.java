@@ -6,6 +6,6 @@ public abstract class Source extends Generator{
 		this.cost= 40;
 		this.buildTime= 5;
 		this.hp= 40;
-		//this.ressourceType= "Food";
+		this.ressourceType= "Food";
 	}
 }

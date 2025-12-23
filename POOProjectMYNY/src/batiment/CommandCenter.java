@@ -1,21 +1,13 @@
 package batiment;
 
-public abstract class CommandCenter extends Batiment {
+public abstract class CommandCenter extends Generator {
 	
 	public CommandCenter() {
-		this.cost= 70;
-	    this.buildTime= 7;
-	    this.hp= 70;
-	    
+		this.cost= 40;
+		this.buildTime= 5;
+		this.hp= 40;
+		this.ressourceType= "Gold";
+	}	    
 	}
-	
-	//@Override
-	//public void functionality(){
-	//if (cost>currentGold){
-	//System.out.println("insufficient Gold"); idk if it should be written in this class but here it is
-	//}
-	
-	
-    
 
-}
+

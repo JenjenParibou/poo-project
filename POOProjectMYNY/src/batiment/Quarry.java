@@ -6,6 +6,6 @@ public abstract class Quarry extends Generator{
 		this.cost= 40;
 		this.buildTime= 5;
 		this.hp= 40;
-		//this.ressourceType= "Stone";
+		this.ressourceType= "Stone";
 	}
 }
