@@ -10,6 +10,8 @@ public class Aigle extends Unit {
         this.cost = 80; //this'll be changed according to yudas's work on economy
         this.type = "Aigle";
         this.aerial = true; //aerial troops can fly over water
+        id = numOfUnits;
+        numOfUnits++;
     }
 
 }

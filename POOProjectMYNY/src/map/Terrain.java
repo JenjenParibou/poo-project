@@ -1,5 +1,6 @@
 package map;
 import java.util.LinkedHashMap;
+import units.*;
 import main.ConsoleColors;
 import java.util.ArrayList;
 import java.math.*;
@@ -48,22 +49,24 @@ public class Terrain { //each cell of the grid is a terrain
 	
 	
 	
-//	public void setIcon() {
-//		switch(type) {
-//			case("Grass"):
-//				icon = ".";
-//				break;
-//			case("Mountain"):
-//				icon = "ʌ";
-//				break;
-//			case("Desert"):
-//				icon = ConsoleColors.YELLOW_BOLD + "☼" + ConsoleColors.RESET;
-//				break;
-//			case("Water"):
-//				icon = ConsoleColors.CYAN + "x" + ConsoleColors.RESET;	
-//				break;
-//		}
-//	}
+	public void setIcon(String faction) {
+		switch(currentElement.getFirst().type) {
+			case("Soldat"):
+				icon = faction + "S" + ConsoleColors.RESET;
+				break;
+			case("Mountain"):
+				icon = "ʌ";
+				break;
+			case("Desert"):
+				icon = ConsoleColors.YELLOW_BOLD + "☼" + ConsoleColors.RESET;
+				break;
+			case("Water"):
+				icon = ConsoleColors.CYAN + "x" + ConsoleColors.RESET;	
+				break;
+			default:
+				icon = " ";
+		}
+	}
 	
 	
 	
@@ -94,11 +97,17 @@ public class Terrain { //each cell of the grid is a terrain
 		
 	}
 	public String getType() { return type;}
-	public void buildBuilding(Batiment batiment) {
+	public Element getElement() {return currentElement.getFirst();}
+
+	
+	public void placeElement(Element elem, int placerFaction) {
 		if (currentElement.isEmpty()) { // can only have 1 element in list
-			currentElement.add(batiment);
-			faction = 1;
-			//setIcon(); (will uncomment thise once we have building types)
+			currentElement.add(elem);
+			faction = placerFaction;
+			if (placerFaction == 1) {
+				setIcon(ConsoleColors.GREEN);
+			} else setIcon(ConsoleColors.RED);
+			
 		} else 
 			System.out.println("Space is already occupied.");
 	}
@@ -106,8 +115,13 @@ public class Terrain { //each cell of the grid is a terrain
 	public void removeElement() {
 		if (!currentElement.isEmpty() ) {
 			currentElement.remove(0);
+			setIcon("");
 			faction = 0;
 		}
+	}
+	
+	public boolean isEmpty() {
+		return currentElement.isEmpty();
 	}
 	
 // RANDOM TYPE TEST

@@ -5,48 +5,48 @@ import java.util.Map;
 
 public class ressources {
 
-    public Map<String, Integer> resources=new HashMap<>();
+    static public Map<String, Integer> currentRessources=new HashMap<>();
 
 
 
-    public ressources() {
-        resources.put("Wood",150);
-        resources.put("Stone",150);
-        resources.put("Gold",150);
-        resources.put("Food",150);
+    static public void addRessources() { // adds all ressources, put it at the start of main
+        currentRessources.put("Wood",150);
+        currentRessources.put("Stone",150);
+        currentRessources.put("Gold",150);
+        currentRessources.put("Food",150);
           }
 
 //    // Add a new ressource type
 //    public void addResourceType(String type) {
-//        resources.putIfAbsent(type, 0);
+//        currentRessources.putIfAbsent(type, 0);
 //    }
 
     // increase ressource
-    public void gather(String type, int value) {
+    static public void gather(String type, int value) {
         if (value <= 0) return;
 
-        resources.put(type, resources.get(type) + value);
+        currentRessources.put(type, currentRessources.get(type) + value);
     }
 
     //  remove ressource
-    public boolean consume(String type, int value) {
+    static public boolean consume(String type, int value) {
         if (value <= 0) return false;
 
-        int current = resources.get(type);
+        int current = currentRessources.get(type);
         if (current < value) return false;
 
-        resources.put(type, current - value);
+        currentRessources.put(type, current - value);
         return true;
     }
 
-    public int getQuantity(String type) {
-        return resources.get(type);
+    static public int getQuantity(String type) {
+        return currentRessources.get(type);
     }
 // prints out the types and values
     
- public void afficher() {
-	 for (String i: resources.keySet()) {
-	        System.out.println(i + ": " + resources.get(i));
+ static public void afficher() {
+	 for (String i: currentRessources.keySet()) {
+	        System.out.println(i + ": " + currentRessources.get(i));
 	    }
  }
 

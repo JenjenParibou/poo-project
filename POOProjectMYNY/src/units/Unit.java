@@ -1,10 +1,13 @@
 package units;
+import map.Element;
 
-public abstract class Unit {
+public abstract class Unit extends Element{
     // stats of each unit
     public int hp, atk, def, spd, range, cost;
     public boolean aerial;
-    public String type;
+    int id;
+    static int numOfUnits;
+    
 
     public boolean isAerial() {
         return aerial;

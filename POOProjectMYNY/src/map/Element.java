@@ -1,5 +1,7 @@
 package map;
 
-public interface Element {
+public abstract class Element {
+	int x, y;
+	public String type;
 
 }

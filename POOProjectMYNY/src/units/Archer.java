@@ -10,6 +10,8 @@ public class Archer extends Unit {
         this.cost = 50; //this'll be changed according to yudas's work on economy
         this.type = "Archer";
         this.aerial = false;
+        id = numOfUnits;
+        numOfUnits++;
     }
 
 }
