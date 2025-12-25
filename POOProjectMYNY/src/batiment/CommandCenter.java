@@ -1,14 +1,25 @@
 package batiment;
+import main.ConsoleColors;
+import main.Game;
+import ressources.ressources;
 
-public abstract class CommandCenter extends Generator {
+public class CommandCenter extends Generator {
 	
 	public CommandCenter() {
-		this.cost= 40;
-		this.buildTime= 5;
-		this.hp= 40;
-		this.ressourceType= "Gold";
 		this.icon = "C";
-	}	    
+		this.type = "CommandCenter";
+		this.hp = 250;
+		this.x = 0;
+		this.y = 0;
+		this.cost= 999999;
+		this.buildTime= 0;
+		this.hp= 250;
+		this.ressourceType= "Gold";
+		this.icon = " " + icon + " ";
+		}	    
+	public void function(int r){		
+			ressources.gather( ressourceType, Game.gameBuildings.size() * r);
+			//System.out.println(ConsoleColors.YELLOW +"Generated " + (int) Game.gameBuildings.size() * r+ " " + ressourceType + "!"+ConsoleColors.RESET );
 	}
 
-
+}

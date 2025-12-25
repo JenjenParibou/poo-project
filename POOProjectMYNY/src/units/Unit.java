@@ -1,12 +1,19 @@
 package units;
+import main.Game;
+import main.ConsoleColors;
 import map.Element;
+import map.*;
+import batiment.*;
+import java.util.HashMap;
 
 public abstract class Unit extends Element{
     // stats of each unit
-    public int hp, atk, def, spd, range, cost;
+    public int atk, def, spd, range,  id, faction;
     public boolean aerial;
-    int id;
+    public String type = "Unit";
     static int numOfUnits;
+    HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed
+    
     
 
     public boolean isAerial() {
@@ -56,13 +63,11 @@ public abstract class Unit extends Element{
     public void setRange(int range) {
         this.range = range;
     }
-
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
+    
+    public void getCost() {
+   	 for (String i: cost.keySet()) {
+   	        System.out.println(ConsoleColors.GREEN + i  + " cost: " +ConsoleColors.RESET+ cost.get(i));
+   	    }
     }
 
     public String getType() {
@@ -94,7 +99,39 @@ public abstract class Unit extends Element{
             damage = 0; // If defense of the target is higher than attack, no damage is dealt
         }
         cible.setHp(cible.getHp() - damage);
+        if(cible.faction == 1) {
+        	Game.updateUnit(cible, Game.playerUnits);
+        } else
+        	Game.updateUnit(cible, Game.enemyUnits);
+        
         return damage;
+    }
+    
+    public int Attacking(Batiment cible) {
+
+        int damage = (int) (this.atk);
+        if (damage < 0) {
+            damage = 0;
+        }
+        cible.hp -= damage;
+        Game.updateBuilding(cible, Game.gameBuildings);
+        
+        return damage;
+    }
+    
+    public boolean isEmpty(int x, int y) {// if pos is (3,2), checkIfEmpty(1,1) will check if (4,3) is empty
+    	return (Map.getTileFromCenter(this.x + x, this.y + y).isEmpty());
+    }
+    public boolean moveTo(int x, int y) {
+    	if (isEmpty(x,y)) {
+    		Map.getTileFromCenter(this.x + x, this.y + y).placeElement(this, faction);
+    		Map.getTileFromCenter(this.x, this.y).removeElement();
+    		this.x += x;
+    		this.y += y;
+    		return true;
+    	} else 
+    		return false;
+    	
     }
 
 }

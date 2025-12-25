@@ -1,15 +1,19 @@
 package map;
+import batiment.CommandCenter;
+import main.ConsoleColors;
+import main.Game;
+
 import java.math.*;
 
-import main.ConsoleColors;
+
+
 
 public class Map {
 	static final int MAX_CASES = 51; // Must be an odd number
 	static final int CENTER = (MAX_CASES - 1) / 2; // or 26 in algorithmic language
 	static Terrain[][] Grid = new Terrain[MAX_CASES][MAX_CASES];// array[n*n] of Terrain
-	static int visibleGrid = 2; // how many cells are visibile around the center
+	static int visibleGrid = 2; // how many cells are visible around the center
 	// will grow every level to signify you taking areas
-	
 
 	
 	static public Terrain getTileReal(int xPos, int yPos) { // use this to go through the array
@@ -31,7 +35,9 @@ public class Map {
 			}
 		}
 		getTileFromCenter(0,0).setType("Grass");//Forcing type of center to "Grass"
-		//getTileFromCenter(0,0).buildBuilding(CommandCenter); (for later)
+		CommandCenter cc = new CommandCenter();
+		getTileFromCenter(0,0).placeElement(cc, 1);
+		Game.gameBuildings.add(cc);
 	}
 	
 	static public int westNorthLimit() { // if Center = 25 and visible grid = 3, returns 22 (leftmost / uppermost cell)
@@ -51,7 +57,7 @@ public class Map {
 		System.out.print("\n");//can't use println so I do a new line this manually
 		for (int i = westNorthLimit() ; i < eastSouthLimit()+1; i++) { // "go from the upmost visible row to the downmost"
 			for (int j =  westNorthLimit(); j<eastSouthLimit()+1; j++) {// "go from the leftmost visible row to the rightmost"
-				System.out.print(ConsoleColors.colorText("[ ", getTileReal(i,j).color) + getTileReal(i,j).icon+ ConsoleColors.colorText(" ]", getTileReal(i,j).color));
+				System.out.print(ConsoleColors.colorText("[", getTileReal(i,j).color) + getTileReal(i,j).icon + ConsoleColors.colorText("]", getTileReal(i,j).color));
 				// Print( "[ " + Icon of current element + " ]") while also coloring the brackets depending on the type of terrain
 			}
 			System.out.print("\n"); //new line once we do every column of a row

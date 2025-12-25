@@ -1,6 +1,12 @@
 package main;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import batiment.*;
 import map.*; //imports all map related classes, use it for other packages like troops, exp...
+import ressources.ressources;
+import units.Unit;
 
 public class Main {
 	
@@ -44,6 +50,11 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		Map.generateMap();
 		Map.getMap();
+
+		ressources.addRessources();
+		
+		
+		
 		
 		String commande;//the input from the player
 		boolean advancer;
@@ -51,7 +62,7 @@ public class Main {
 		
 		int turnsBeforeFight = 10; //turns before enemies spawn
 		while(!gameOver){
-			while (turnsBeforeFight > 0) {
+			while (!gameOver && turnsBeforeFight > 0) {
 				print("What will you do?");
 				
 				commande = sc.next();//get input from player
@@ -68,13 +79,51 @@ public class Main {
 	}
 	
 	 static public void turnActions(){
+		 deathBatiment(Game.gameBuildings);//removes any buildings with 0 hp
+		 deathUnit(Game.playerUnits);
+		 deathUnit(Game.enemyUnits);
 		 
-		//stuff
+		 HashMap<String, Integer> oldRessources= new HashMap<>();//to check whether ressources will change this turn
+		 oldRessources.putAll(ressources.currentRessources);
+
+		 for(Batiment i: Game.gameBuildings) {	//if building is built, carry its function		 
+			 if (i.buildTime>0) {
+			 System.out.println(ConsoleColors.RED + i.type + " is still under construction..."+ConsoleColors.RESET);
+			 i.buildTime--;
+			 }else {i.function(10); i.function();}
+		 }
+		 
+		 for (String i : ressources.currentRessources.keySet()) {//print resource value if it changed this turn
+			 if (ressources.currentRessources.get(i) > oldRessources.get(i)) {
+				 	int amount = ressources.currentRessources.get(i) - oldRessources.get(i);
+					System.out.println(ConsoleColors.YELLOW+"Generated " + amount + " " + i + "!"+ConsoleColors.RESET);
+			 }
+		 }
+		 
+		 
+	}
+	
+	 
+	 
+	 
+	static void deathBatiment(ArrayList<Batiment> b) {
+		for(int i = b.size() - 1; i>= 0; i--) {
+			 if(b.get(i).hp <= 0) {
+				Map.getTileFromCenter(b.get(i).x, b.get(i).y).removeElement();
+			 	Game.gameBuildings.remove(i);
+			 }
+		 }
 	}
 	
 	
-	
-	
+	static void deathUnit(ArrayList<Unit> u) {
+		for(int i = u.size() - 1; i>= 0; i--) {
+			 if(u.get(i).hp <= 0) {
+				Map.getTileFromCenter(u.get(i).x, u.get(i).y).removeElement();
+			 	u.remove(i);
+			 }
+		 }
+	}
 	
 	
 	static public void logo() {

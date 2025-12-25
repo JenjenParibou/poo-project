@@ -1,18 +1,18 @@
 package ressources;
  
 import java.util.HashMap;
-import java.util.Map;
+import main.ConsoleColors;
 
 public class ressources {
 
 
-    static public Map<String, Integer> currentRessources= new HashMap<>();
+    static public HashMap<String, Integer> currentRessources= new HashMap<>();
 
     static public void addRessources() { // adds all ressources, put it at the start of main
-        currentRessources.put("Wood",150);
-        currentRessources.put("Stone",150);
-        currentRessources.put("Gold",150);
-        currentRessources.put("Food",150);
+        currentRessources.put("Wood",10);
+        currentRessources.put("Stone",10);
+        currentRessources.put("Gold",100);
+        currentRessources.put("Food",10);
           }
 
 //    // Add a new ressource type
@@ -45,7 +45,7 @@ public class ressources {
     
  static public void afficher() {
 	 for (String i: currentRessources.keySet()) {
-	        System.out.println(i + ": " + currentRessources.get(i));
+	        System.out.println(ConsoleColors.YELLOW + i  + ": " +ConsoleColors.RESET+ currentRessources.get(i));
 	    }
  }
 

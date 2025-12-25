@@ -1,12 +1,14 @@
 package batiment;
 
-public abstract class TrainingGround extends Batiment{
+public class TrainingGround extends Batiment{
 	
 	public TrainingGround() {
-		this.cost= 50;
-	    this.buildTime= 7;
+		this.type = "Training Ground";
+		this.cost= 100;
+	    this.buildTime= 2;
 	    this.hp= 50;
 	    this.icon = "T";
-
+		this.id = numOfBuildings;
+		numOfBuildings++;
 }
 }

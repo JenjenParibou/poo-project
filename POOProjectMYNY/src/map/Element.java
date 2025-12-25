@@ -1,8 +1,9 @@
 package map;
 
 public abstract class Element {
-	int x, y;
+	public int x = 0, y = 0, hp, id;
+	
 	public String type;
-	public String icon;
+	public String icon = "_";
 
 }

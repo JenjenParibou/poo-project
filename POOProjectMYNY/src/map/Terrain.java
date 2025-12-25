@@ -11,10 +11,10 @@ public class Terrain { //each cell of the grid is a terrain
 	//String[] possibleTypes = {"Grass", "Mountain", "Desert", "Water"};
 	
 	String type; 
-	String icon = " "; //icon of current building or unit
+	String icon = "   "; //icon of current building or unit
 	String color;// green brackets for grass, blue for water..
 	int faction = 0; // 0 by default, 1 or -1 depending on who owns it and has a building on it, can't build stuff on it if it's already owned
-	int bonus = 1; // mult that increases based on what's happpening?
+	public double bonus = 1.5; // mult that increases based on what's happpening?
 	ArrayList<Element> currentElement = new ArrayList<Element>();
 	//list that holds 1 element: either a building or a unit. can only hold one element (for now)
 	
@@ -38,7 +38,7 @@ public class Terrain { //each cell of the grid is a terrain
 		case("Mountain"):
 			color = ConsoleColors.RESET;
 		break;
-		case("Desert"):
+		case("Forest"):
 			color = ConsoleColors.YELLOW;
 		break;
 		case("Water"):
@@ -69,7 +69,7 @@ public class Terrain { //each cell of the grid is a terrain
 		// Weighted probabilities, it's a map containing terrain types with their probabibility of appearing
 		possibleTypes.put("Grass", 0.4);
 		possibleTypes.put("Mountain", 0.25);
-		possibleTypes.put("Desert", 0.25);
+		possibleTypes.put("Forest", 0.25);
 		possibleTypes.put("Water", 0.1);
 		//All probabilities must add up to 1
 //		System.out.println(proba);
@@ -94,23 +94,18 @@ public class Terrain { //each cell of the grid is a terrain
 	public void placeElement(Element elem, int placerFaction) {
 		if (currentElement.isEmpty()) { // can only have 1 element in list
 			currentElement.add(elem);
-			faction = placerFaction;
+
+				icon = currentElement.getFirst().icon;
 			
-			if (placerFaction == 1) {
-				icon = ConsoleColors.RESET +currentElement.getFirst().icon;
-				//setIcon(ConsoleColors.GREEN);
-			} else {
-				//setIcon(ConsoleColors.RED);
-				icon = ConsoleColors.RED +currentElement.getFirst().icon + currentElement.getFirst().icon;
-			}
+			
 			
 		} else 
 			System.out.println("Space is already occupied.");
 	}
 	
 	public void removeElement() {
-		if (!currentElement.isEmpty() ) {
-			currentElement.remove(0);
+		if (!currentElement.isEmpty()) {
+			currentElement.removeFirst();
 			icon = " ";
 			//setIcon("");
 			faction = 0;
