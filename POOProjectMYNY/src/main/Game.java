@@ -67,28 +67,33 @@ public class Game {
 		}
 	}
 	
+////////////////////// CHECK IF ELEMENT CAN BE ADDED //////////////////////
 	
-	static public boolean canAddElem(int x,int y, boolean waterProof) {//checks if its possible to add an element in that position
-		if (!Map.inRange(x, y)) {
-			System.out.println("Tile is not currently visible."); 
+	static public boolean canAddElem(int x,int y, boolean waterProof, int oneIfFriendly) {//checks if its possible to add an element in that position
+		if (!Map.inRange(x, y, oneIfFriendly)) {
+			if (oneIfFriendly == 1)
+				System.out.println("Tile is not currently visible."); 
 			return false;
 			} 
 			
 		if (!Map.getTileFromCenter(x, y).isEmpty()) {
-			System.out.println("Tile is already occupied."); 
+			if (oneIfFriendly == 1)
+				System.out.println("Tile is already occupied.");
+			 
 			return false;
 			} 
 		
-		if(Map.getTileFromCenter(x, y).getType() == "Water" && !waterProof) {
+		if(oneIfFriendly == 1 && Map.getTileFromCenter(x, y).getType() == "Water" && !waterProof) {
 			System.out.println("This cannot go on a water tile.");		
-			return false;
-			}							
-			return true;					
+			return false;			
+			}	
+		
+		return true;					
 	}
 	
-	
+////////////////////// BUILDING STUFF //////////////////////
 	static boolean addBuilding(String build, int x, int y) {
-		if (!canAddElem(x,y, false)) {
+		if (!canAddElem(x,y, false, 1)) {
 			return false;}
 		
 		switch(build.toLowerCase()) {
@@ -125,19 +130,10 @@ public class Game {
 		return true;
 	}
 	
-	
+////////////////////// UNIT STUFF //////////////////////
 	
 	static public boolean addUnit(String unitToAdd, int x, int y,int faction) {// adds unit at pos (x,y) belonging to faction 1 or -1 (player or computer)
-		boolean waterproof;
-		if (unitToAdd == "eagle" || unitToAdd == "e") {
-			waterproof = true;
-		} else {
-			waterproof = false;
-			}			
-		
-		if (!canAddElem(x,y, waterproof)) {
-			return false;}
-		
+				
 		switch(unitToAdd.toLowerCase()) {
 			case("s"):
 			case("soldier"):
@@ -155,6 +151,11 @@ public class Game {
 	}
 	
 	static boolean addUnit(Unit u, int x, int y,  int faction) {//adds the unit to both the map and the 
+		if (!canAddElem(x,y, u.aerial, faction)) {//checks if element can be added here instead of the previous function because the object already exists, therefor we can use its aerial value
+			u = null;//hacky way to delete an object in java, should get eaten by the garbage collector as nothing references it elsewhere
+			return false;
+			}
+		
 		for (String i: u.cost.keySet()) {
 			if (ressources.currentRessources.get(i) < u.cost.get(i)) {
 				System.out.println("You need: " + (u.cost.get(i) -ressources.currentRessources.get(i)) +" of \""+i+"\" in order to deploy this unit.");
@@ -242,5 +243,11 @@ public class Game {
 		}
 		
 	}
+	
+	
+	
+	////////////////////// ENEMY STUFF //////////////////////
+	
+	
 	
 }

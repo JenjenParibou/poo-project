@@ -13,7 +13,7 @@ public class Terrain { //each cell of the grid is a terrain
 	String type; 
 	String icon = "   "; //icon of current building or unit
 	String color;// green brackets for grass, blue for water..
-	int faction = 0; // 0 by default, 1 or -1 depending on who owns it and has a building on it, can't build stuff on it if it's already owned
+	int faction = -1; // -1 by default, 1 or -1 depending on who owns it and has a building on it, can't build stuff on it if it's already owned
 	public double bonus = 1.5; // mult that increases based on what's happpening?
 	ArrayList<Element> currentElement = new ArrayList<Element>();
 	//list that holds 1 element: either a building or a unit. can only hold one element (for now)
@@ -95,8 +95,8 @@ public class Terrain { //each cell of the grid is a terrain
 		if (currentElement.isEmpty()) { // can only have 1 element in list
 			currentElement.add(elem);
 
-				icon = currentElement.getFirst().icon;
-			
+			icon = currentElement.getFirst().icon;
+			this.faction = placerFaction;
 			
 			
 		} else 
@@ -107,7 +107,7 @@ public class Terrain { //each cell of the grid is a terrain
 		if (!currentElement.isEmpty()) {
 			currentElement.removeFirst();
 			icon = "   ";
-			faction = 0;
+			faction = -1;
 		}
 	}
 	

@@ -69,7 +69,7 @@ public class Main {
 				if(turnsBeforeFight> 1) 
 					print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turns left before the enemy arrives...");
 					else 
-						print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turn left before the enemy arrives...");
+						print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turn left.");
 				
 				print("What will you do?");
 				
@@ -82,6 +82,7 @@ public class Main {
 					turnActions();
 					//actions that are taken at the end of a turn, i.e generating gold
 					}
+				print(ConsoleColors.RED +"THE ARRIVED HAS ARRIVED"+ ConsoleColors.RESET);
 			}
 		}
 	}

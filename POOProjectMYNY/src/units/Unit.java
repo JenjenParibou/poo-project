@@ -140,7 +140,7 @@ public abstract class Unit extends Element{
     
     
     public boolean moveTo(int x, int y) {
-    	if(!Game.canAddElem(this.x + x, this.y+y, aerial)) {System.out.println("Couldn't move unit.");return false;}
+    	if(!Game.canAddElem(this.x + x, this.y+y, aerial, this.faction)) {System.out.println("Couldn't move unit.");return false;}
     	Map.getTileFromCenter(this.x + x, this.y + y).placeElement(this, faction);
     	Map.getTileFromCenter(this.x, this.y).removeElement();
     	this.x += x;
