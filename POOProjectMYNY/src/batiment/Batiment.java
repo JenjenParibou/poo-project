@@ -8,6 +8,7 @@ public abstract class Batiment extends Element { //implementing Element interfac
 	//idk if every building has hp or no, i can just take it out and add it where its needed
 	public int cost, buildTime;
 	public static int numOfBuildings;
+	public String elementType = "Building";
 	Scanner sc= new Scanner(System.in);
 
 	

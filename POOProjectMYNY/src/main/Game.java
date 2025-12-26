@@ -17,7 +17,6 @@ public class Game {
 	static public int x,y;
 	
 	static public boolean command(String com) {//true ends turn, false doesn't
-		sc.reset();
 		switch(com.toLowerCase()) {
 		case("h"):
 		case("help"):
@@ -35,18 +34,22 @@ public class Game {
 				}
 			System.out.println("X value of unit?");
 			x = sc.nextInt();
+			sc.nextLine();//consumes the new line to not run into type mismatch 
 			System.out.println("Y value of unit?");
 			y = sc.nextInt();
+			sc.nextLine();
 			System.out.println("What to build?");
-			String unit = sc.next();
+			String unit = sc.nextLine();
 			return addUnit(unit,x,y,1);
 		case("build"):
 			System.out.println("X value of building?");
 			x = sc.nextInt();
+			sc.nextLine();
 			System.out.println("Y value of building?");
 			y = sc.nextInt();
+			sc.nextLine();
 			System.out.println("What to build?");
-			String building = sc.next();
+			String building = sc.nextLine();
 			return addBuilding(building, x, y);
 		case("map"):
 			Map.getMap();
@@ -59,6 +62,7 @@ public class Game {
 		case("move"):
 			System.out.println("Please type out the id of the desired unit.");
 			int id = sc.nextInt();
+			sc.nextLine();
 			Unit u = findUnitThroughID(id,playerUnits);
 			if (u == null) {System.out.println("This id does not exist."); return false;}
 			return playerMoveUnit(u);
@@ -217,12 +221,13 @@ public class Game {
 	
 	static boolean playerMoveUnit(Unit u) {
 		System.out.println("In what direction? (Up, Down, left, right)");
-		String direction = sc.next();
+		String direction = sc.nextLine();
 		int rangeChosen = 1;
 		if(u.range>1) {
 			do {
 				System.out.println("By how many squares? (value can go between 1 and " + u.range + ").");
 				rangeChosen = sc.nextInt();
+				sc.nextLine();
 			} while (rangeChosen < 1 && rangeChosen > u.range);
 		}
 		switch(direction.toLowerCase()) {

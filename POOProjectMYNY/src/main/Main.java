@@ -30,7 +30,7 @@ public class Main {
 		print("1. New Game. \n2. Load. \n3. Quit.");
 		print("Please choose an option by typing a number."); // Loading does nothing for now, we'll fix it later
 		
-		do { op = sc.nextInt(); // User is prompted to type a number
+		do { op = sc.nextInt();sc.nextLine(); // User is prompted to type a number
 		} while (op < 1 || op > 3); //User may only type a number between 1 and 3
 		
 		switch (op) {
@@ -73,7 +73,7 @@ public class Main {
 				
 				print("What will you do?");
 				
-				commande = sc.next();//get input from player
+				commande = sc.nextLine();//get input from player
 				advancer = Game.command(commande);//the game class will output accordingly
 				//advancer will be set to true if the player's input is a turn ending action, for example placing a building
 				//advancer will be set to false if the player's input isn't a turn ending action, for example viewing the map

@@ -1,5 +1,6 @@
 package units;
 import main.Game;
+import main.Point;
 import main.ConsoleColors;
 import map.Element;
 import map.*;
@@ -13,7 +14,7 @@ public abstract class Unit extends Element{
     public String type = "Unit";
     static int numOfUnits;
     public HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed
-    
+	public String elementType = "Building";
     
 
     public boolean isAerial() {
@@ -126,6 +127,23 @@ public abstract class Unit extends Element{
         return damage;
     }
     
+    
+//    public Point checkForElement(String typeToLookFor){//Checks around unit if there are enemy units to attack
+//    	Point p = new Point();
+//    	int leftmost = x - range;
+//    	int rightmost = x + range;
+//    	int upmost = y - range;
+//    	int downmost = y + range;
+//    	
+//    	for (int i = upmost; i<=downmost; i++) {
+//    		for (int j = leftmost; j<=rightmost; j++) {
+//    			if ()
+//    		}
+//    	}
+//    	return p;
+//    }
+    
+    
     public int Attacking(Batiment cible) {
 
         int damage = (int) (this.atk);
@@ -145,6 +163,7 @@ public abstract class Unit extends Element{
     	Map.getTileFromCenter(this.x, this.y).removeElement();
     	this.x += x;
     	this.y += y;
+    	Map.getMap();
     	return true;    	
     }
 
