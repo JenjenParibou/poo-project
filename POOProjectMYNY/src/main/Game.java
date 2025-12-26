@@ -17,6 +17,7 @@ public class Game {
 	static public int x,y;
 	
 	static public boolean command(String com) {//true ends turn, false doesn't
+		sc.reset();
 		switch(com.toLowerCase()) {
 		case("h"):
 		case("help"):
