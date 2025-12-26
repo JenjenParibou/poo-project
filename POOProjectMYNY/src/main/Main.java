@@ -82,8 +82,8 @@ public class Main {
 					turnActions();
 					//actions that are taken at the end of a turn, i.e generating gold
 					}
-				print(ConsoleColors.RED +"THE ARRIVED HAS ARRIVED"+ ConsoleColors.RESET);
-			}
+				}
+			print(ConsoleColors.RED +"THE ENEMY HAS ARRIVED"+ ConsoleColors.RESET);
 		}
 	}
 	

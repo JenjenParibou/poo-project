@@ -56,7 +56,7 @@ public class Map {
 	}
 	
 	static public boolean onFogTile(int x, int y) {//returns true if this position (relative to center) is on a fog tile
-		return (Math.abs(x) == eastSouthLimit() || Math.abs(y) == eastSouthLimit());
+		return (x == eastSouthLimit() || x == westNorthLimit() || y == eastSouthLimit()|| y == westNorthLimit());
 	}
 	
 	static public void getMap() { // print viewable map, will get called each turn
