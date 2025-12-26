@@ -49,6 +49,7 @@ public class Main {
 	static public void game() { // aka this is where everything happens
 		Scanner sc = new Scanner(System.in);
 		Map.generateMap();
+		print("And thus, your legend begins.");
 		Map.getMap();
 
 		ressources.addRessources();
@@ -61,8 +62,15 @@ public class Main {
 		boolean gameOver = false;
 		
 		int turnsBeforeFight = 10; //turns before enemies spawn
+		
 		while(!gameOver){
 			while (!gameOver && turnsBeforeFight > 0) {
+				System.out.print("\n");
+				if(turnsBeforeFight> 1) 
+					print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turns left before the enemy arrives...");
+					else 
+						print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turn left before the enemy arrives...");
+				
 				print("What will you do?");
 				
 				commande = sc.next();//get input from player

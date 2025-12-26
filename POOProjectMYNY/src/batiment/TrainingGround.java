@@ -8,6 +8,7 @@ public class TrainingGround extends Batiment{
 	    this.buildTime= 2;
 	    this.hp= 50;
 	    this.icon = "T";
+	    this.icon = " " + icon + " ";
 		this.id = numOfBuildings;
 		numOfBuildings++;
 }

@@ -106,8 +106,7 @@ public class Terrain { //each cell of the grid is a terrain
 	public void removeElement() {
 		if (!currentElement.isEmpty()) {
 			currentElement.removeFirst();
-			icon = " ";
-			//setIcon("");
+			icon = "   ";
 			faction = 0;
 		}
 	}

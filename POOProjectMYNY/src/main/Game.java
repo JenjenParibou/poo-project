@@ -17,16 +17,28 @@ public class Game {
 	static public int x,y;
 	
 	static public boolean command(String com) {//true ends turn, false doesn't
-		switch(com) {
+		switch(com.toLowerCase()) {
+		case("h"):
 		case("help"):
-			System.out.println("map: Shows the current map.\n stats: Shows stats. unit: generates unit.");
+			System.out.println("LIST OF COMMON COMMAND");
+			System.out.println("map: Shows the current map.\nstats: Shows stats.\nunit: generates unit.");
+			System.out.println("build: begins building construction.\nmove: move a unit.\nattack:attack with a unit.");
+			System.out.println("Refer to game manual for other commands.");
 			return false;
+		case("u"):
+		case("units"):
 		case("unit"): //just for testing
+			if (!trainingCampExists()) {
+				System.out.println("Cannot deploy units without a training camp.");
+				return false;
+				}
 			System.out.println("X value of unit?");
 			x = sc.nextInt();
 			System.out.println("Y value of unit?");
 			y = sc.nextInt();
-			return addUnit("Soldat",x,y,1);
+			System.out.println("What to build?");
+			String unit = sc.next();
+			return addUnit(unit,x,y,1);
 		case("build"):
 			System.out.println("X value of building?");
 			x = sc.nextInt();
@@ -43,8 +55,14 @@ public class Game {
 			return false;
 		case("skip"):
 			return true;
+		case("move"):
+			System.out.println("Please type out the id of the desired unit.");
+			int id = sc.nextInt();
+			Unit u = findUnitThroughID(id,playerUnits);
+			if (u == null) {System.out.println("This id does not exist."); return false;}
+			return playerMoveUnit(u);
 		default:
-			System.out.println("Unknown command. Perhaps you've typed it in lowercase?");
+			System.out.println("Unknown command.");
 			return false;
 		}
 	}
@@ -52,7 +70,7 @@ public class Game {
 	
 	static public boolean canAddElem(int x,int y, boolean waterProof) {//checks if its possible to add an element in that position
 		if (!Map.inRange(x, y)) {
-			System.out.println("You can only place in the currently visible area!"); 
+			System.out.println("Tile is not currently visible."); 
 			return false;
 			} 
 			
@@ -62,7 +80,7 @@ public class Game {
 			} 
 		
 		if(Map.getTileFromCenter(x, y).getType() == "Water" && !waterProof) {
-			System.out.println("You cannot place this on a water terrain!");		
+			System.out.println("This cannot go on a water tile.");		
 			return false;
 			}							
 			return true;					
@@ -73,7 +91,7 @@ public class Game {
 		if (!canAddElem(x,y, false)) {
 			return false;}
 		
-		switch(build) {
+		switch(build.toLowerCase()) {
 		case("quarry"):
 		case("q"):
 			return addBuilding(new Quarry(), x, y);//function to make code more readable
@@ -111,7 +129,7 @@ public class Game {
 	
 	static public boolean addUnit(String unitToAdd, int x, int y,int faction) {// adds unit at pos (x,y) belonging to faction 1 or -1 (player or computer)
 		boolean waterproof;
-		if (unitToAdd == "Aigle") {
+		if (unitToAdd == "eagle" || unitToAdd == "e") {
 			waterproof = true;
 		} else {
 			waterproof = false;
@@ -120,26 +138,34 @@ public class Game {
 		if (!canAddElem(x,y, waterproof)) {
 			return false;}
 		
-		switch(unitToAdd) {
-			case("Soldat"):
-				addUnit(new Soldat(), x, y, faction);//function to make code more readable
-				break;	
+		switch(unitToAdd.toLowerCase()) {
+			case("s"):
+			case("soldier"):
+			case("soldat"):
+				return addUnit(new Soldat(), x, y, faction);//function to make code more readable	
+			case("a"):
 			case("Archer"):
-				addUnit(new Archer(), x, y, faction);//function to make code more readable
-				break;	
+				return addUnit(new Archer(), x, y, faction);//function to make code more readable
 			case("Aigle"):
-				addUnit(new Aigle(), x, y, faction);//function to make code more readable
-				break;	
+				return addUnit(new Aigle(), x, y, faction);//function to make code more readable
 			default:
 				System.out.println("Not a unit, please try again.");
 				return false;
 			}
-			
-			Map.getMap();
-			return true; 	
 	}
 	
-	static void addUnit(Unit u, int x, int y,  int faction) {//adds the unit to both the map and the 
+	static boolean addUnit(Unit u, int x, int y,  int faction) {//adds the unit to both the map and the 
+		for (String i: u.cost.keySet()) {
+			if (ressources.currentRessources.get(i) < u.cost.get(i)) {
+				System.out.println("You need: " + (u.cost.get(i) -ressources.currentRessources.get(i)) +" of \""+i+"\" in order to deploy this unit.");
+				return false;
+			}
+		}
+		for (String i: u.cost.keySet()) {
+			if (ressources.currentRessources.get(i) < u.cost.get(i)) {
+				ressources.consume(i, u.cost.get(i));
+			}
+		}	
 		Map.getTileFromCenter(x, y).placeElement(u, faction);
 		u.x = x;
 		u.y = y;
@@ -148,6 +174,8 @@ public class Game {
 			playerUnits.add(u);
 		} else
 			enemyUnits.add(u);
+		Map.getMap();
+		return true; 	
 	}
 		
 	
@@ -166,4 +194,53 @@ public class Game {
 			}
 		}
 	}
+	
+	static public boolean trainingCampExists() {
+		for (Batiment i: gameBuildings) {
+			if (i.type == "Training Ground") {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	static Unit findUnitThroughID(int id, ArrayList<Unit> u) {
+		for (Unit i: u) {
+			if (i.id == id) {
+				return i;
+			}
+		}
+		return null;
+	}
+	
+	static boolean playerMoveUnit(Unit u) {
+		System.out.println("In what direction? (Up, Down, left, right)");
+		String direction = sc.next();
+		int rangeChosen = 1;
+		if(u.range>1) {
+			do {
+				System.out.println("By how many squares? (value can go between 1 and " + u.range + ").");
+				rangeChosen = sc.nextInt();
+			} while (rangeChosen < 1 && rangeChosen > u.range);
+		}
+		switch(direction.toLowerCase()) {
+		case("u"):
+		case("up"):
+			return u.moveTo(0, -rangeChosen);
+		case("d"):
+		case("down"):
+			return u.moveTo(0, rangeChosen);
+		case("l"):
+		case("left"):
+			return u.moveTo(-rangeChosen, 0);
+		case("r"):
+		case("right"):
+			return u.moveTo(rangeChosen, 0);
+		default:
+			System.out.println("Invalid direction.");
+			return false;
+		}
+		
+	}
+	
 }

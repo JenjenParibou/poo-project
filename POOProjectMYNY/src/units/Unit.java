@@ -8,11 +8,11 @@ import java.util.HashMap;
 
 public abstract class Unit extends Element{
     // stats of each unit
-    public int atk, def, spd, range,  id, faction;
+    public int atk, def, spd, range,  id, faction, basehp;
     public boolean aerial;
     public String type = "Unit";
     static int numOfUnits;
-    HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed
+    public HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed
     
     
 
@@ -62,6 +62,25 @@ public abstract class Unit extends Element{
 
     public void setRange(int range) {
         this.range = range;
+    }
+    
+    public void showStats() {
+    	System.out.println(ConsoleColors.GREEN + "Health: " + ConsoleColors.RESET + hp);
+    	System.out.println(ConsoleColors.GREEN + "Attack: " + ConsoleColors.RESET + atk);
+    	System.out.println(ConsoleColors.GREEN + "Defense: " + ConsoleColors.RESET + def);
+    	System.out.println(ConsoleColors.GREEN + "Speed: " + ConsoleColors.RESET + spd);
+    	System.out.println(ConsoleColors.GREEN + "Range: " + ConsoleColors.RESET + range);
+    }
+    
+    public void improveStats() {
+    	int improveRatio = 10;
+    	if(Game.gameLevel < 10) {
+    		improveRatio = Game.gameLevel;
+    	}   	
+    	basehp = basehp + 10*improveRatio;
+    	hp = basehp;
+    	atk += (int) 2.5*improveRatio;
+    	def += (int) 2.5*improveRatio;
     }
     
     public void getCost() {
@@ -119,19 +138,14 @@ public abstract class Unit extends Element{
         return damage;
     }
     
-    public boolean isEmpty(int x, int y) {// if pos is (3,2), checkIfEmpty(1,1) will check if (4,3) is empty
-    	return (Map.getTileFromCenter(this.x + x, this.y + y).isEmpty());
-    }
+    
     public boolean moveTo(int x, int y) {
-    	if (isEmpty(x,y)) {
-    		Map.getTileFromCenter(this.x + x, this.y + y).placeElement(this, faction);
-    		Map.getTileFromCenter(this.x, this.y).removeElement();
-    		this.x += x;
-    		this.y += y;
-    		return true;
-    	} else 
-    		return false;
-    	
+    	if(!Game.canAddElem(this.x + x, this.y+y, aerial)) {System.out.println("Couldn't move unit.");return false;}
+    	Map.getTileFromCenter(this.x + x, this.y + y).placeElement(this, faction);
+    	Map.getTileFromCenter(this.x, this.y).removeElement();
+    	this.x += x;
+    	this.y += y;
+    	return true;    	
     }
 
 }

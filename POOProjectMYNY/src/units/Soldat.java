@@ -5,7 +5,8 @@ import main.ConsoleColors;
 public class Soldat extends Unit {
     public Soldat() {
     	this.icon = "S";
-        this.hp = 100;
+    	this.basehp = 100;
+        this.hp = basehp;
         this.atk = 30;
         this.def = 20;
         this.spd = 1; //speed is how many tiles of the map a unit can move per turn
@@ -14,6 +15,7 @@ public class Soldat extends Unit {
         this.aerial = false;
         this.cost.put("Gold", 20);
         this.cost.put("Food", 20);
+        this.cost.put("Stone", 10);
         id = numOfUnits;
         numOfUnits++;
         if(numOfUnits>99) {numOfUnits=0;}
