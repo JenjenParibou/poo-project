@@ -30,7 +30,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		
 		logo(); // procedure that draws the game's logo
-		print("1. New Game. \n2. Load. (will be added later) \n3. Quit.");
+		print("1. New Game. \n2. Load. (Currently not availible) \n3. Quit.");
 		print("Please choose an option by typing a number."); 
 		
 		do { op = sc.nextInt();sc.nextLine(); // User is prompted to type a number
