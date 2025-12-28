@@ -9,10 +9,10 @@ public class ressources {
     static public HashMap<String, Integer> currentRessources= new HashMap<>();
 
     static public void addRessources() { // adds all ressources, put it at the start of main
-        currentRessources.put("Wood",1000);
-        currentRessources.put("Stone",1000);
-        currentRessources.put("Gold",1000);
-        currentRessources.put("Food",1000);
+        currentRessources.put("Wood",40);
+        currentRessources.put("Stone",40);
+        currentRessources.put("Gold",100);
+        currentRessources.put("Food",40);
           }
 
 //     Add a new ressource type

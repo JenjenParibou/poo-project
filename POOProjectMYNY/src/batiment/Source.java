@@ -7,7 +7,7 @@ public class Source extends Generator{
 		this.elementType = "Building";
 		this.cost= 40;
 		this.buildTime= 2;
-		this.basehp= 40;
+		this.basehp= 90;
 		this.hp= basehp;
 		this.ressourceType= "Food";
 		this.icon = "F";

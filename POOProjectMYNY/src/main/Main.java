@@ -14,7 +14,7 @@ public class Main {
 	public static boolean gameOver = false;
 	
 	static public void main(String[] args) {
-		//titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
+		titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
 		game();//will start the game
 	}
 	
@@ -29,9 +29,9 @@ public class Main {
 		int op;
 		Scanner sc = new Scanner(System.in);
 		
-		logo(); // procedure that draws the game's logo (we can change the name later, this is just a placeholder
-		print("1. New Game. \n2. Load. \n3. Quit.");
-		print("Please choose an option by typing a number."); // Loading does nothing for now, we'll fix it later
+		logo(); // procedure that draws the game's logo
+		print("1. New Game. \n2. Load. (will be added later) \n3. Quit.");
+		print("Please choose an option by typing a number."); 
 		
 		do { op = sc.nextInt();sc.nextLine(); // User is prompted to type a number
 		//nextLine followed by nextInt to avoid \n and inputmismatch errors
@@ -42,11 +42,11 @@ public class Main {
 			game();
 			break;
 		case 2:
-			game();//haven't added load function yet
+			game();
 			break;
 		case 3:
 			print("See you later!");
-			break;
+			System.exit(0); //ends game.
 		}
 	}
 	
@@ -152,7 +152,7 @@ public class Main {
 		for(int i = b.size() - 1; i>= 0; i--) {
 			 if(b.get(i).hp <= 0) {
 				Map.getTileFromCenter(b.get(i).x, b.get(i).y).removeElement();
-				if (b.get(i).type == "CommandCenter") {//if the destroyed building was the command center, end game
+				if (b.get(i).type == "Command Center") {//if the destroyed building was the command center, end game
 					gameOver = true;
 					Map.getMap();
 					//System.out.println(ConsoleColors.RED + "THE COMMAND CENTER HAS BEEN DESTROYED" + ConsoleColors.RESET);

@@ -31,7 +31,7 @@ public class Game {
 			return false;
 		case("u"):
 		case("units"):
-		case("unit"): //just for testing
+		case("unit"): 
 			if (!enemyUnits.isEmpty()) {System.out.println("You cannot deploy units during a fight!"); return false;}
 			if (!trainingCampExists()) {
 				System.out.println("Cannot deploy units without a training camp.");
@@ -62,6 +62,7 @@ public class Game {
 			Map.getMap();
 			return false;
 		case("stats"):
+		case("stat"):
 			ressources.showRessources();
 			return false;
 		case("sk"):
@@ -215,13 +216,14 @@ public class Game {
 		}
 		u.assignIcon(faction);//This is mostly so that friendly units can be green and enemy units red
 		//must be called before being added to the map or else the icon won't be shown on the map as the old one has already been stored
-		u.train();//make stats better
+		u.train(1);//make stats better
 		Map.getTileFromCenter(x, y).placeElement(u, faction);
 		u.x = x;
 		u.y = y;
 		u.faction = faction;
 		if(faction == PLAYER_FACTION) {
 			playerUnits.add(u);
+			Map.getMap();
 		} else
 			enemyUnits.add(u);
 		return true; 	
@@ -380,15 +382,28 @@ public class Game {
 			Game.addUnit("Soldier", -4, -Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Soldier", 4, -Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Archer", 2, Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
 			break;
 		case 5:
 			Game.addUnit("Eagle",Map.visibleGrid , -3, ENEMY_FACTION);
 			Game.addUnit("Eagle",-Map.visibleGrid , 3, ENEMY_FACTION);
-
+			Game.addUnit("Soldier", 1, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", -1, Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 4, Map.visibleGrid, ENEMY_FACTION);
+		case 6:
+			Game.addUnit("Archer",4, Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",Map.visibleGrid-1 , Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",-Map.visibleGrid+1, Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",Map.visibleGrid-1 , -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",-Map.visibleGrid+1, -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Archer",-4, -Map.visibleGrid , ENEMY_FACTION);
 		default:
-			Game.addUnit("Soldier", -3, -Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", 3, -Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Archer", 3, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Archer",4, Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",-4 , Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",-Map.visibleGrid+1, Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",Map.visibleGrid-1 , -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",-Map.visibleGrid+1, -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Archer",-4, -Map.visibleGrid , ENEMY_FACTION);
 			break;
 		}
 		
@@ -405,14 +420,21 @@ public class Game {
 
 	static void levelIncrease() {
 		gameLevel++;
-		for (Unit i: playerUnits) {
-			i.train();
-			i.hp = i.basehp;
-			System.out.println(i.icon + " has trained! here are their stats: ");
-			i.showStats();
-			wait(100);
+		int numOfTrainingGrounds = 0;
+		for (Batiment i: gameBuildings) {
+			if (i.type == "Training Ground")
+				numOfTrainingGrounds++;
 		}
-		if (gameLevel <= 10 && gameLevel % 2 == 0) {
+		for (Unit i: playerUnits) {
+			i.train(numOfTrainingGrounds);	
+			i.hp = i.basehp;
+			if (numOfTrainingGrounds > 0) {
+				System.out.println(i.icon + " has trained! here are their stats: ");
+				i.showStats();
+				wait(100);
+			}
+		}
+		if (gameLevel <= 15 && (gameLevel+1) % 3 == 0) {
 			Map.visibleGrid++;
 			System.out.println("Your influence grows, and with it, so does your territory:");
 		}

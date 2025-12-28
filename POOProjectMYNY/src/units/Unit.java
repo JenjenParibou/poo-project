@@ -73,15 +73,15 @@ public abstract class Unit extends Element{
     	System.out.println(ConsoleColors.GREEN + "Range: " + ConsoleColors.RESET + range);
     }
     
-    public void train() { // improves stats based on current game level
+    public void train( int numOfTrainingGrounds) { // improves stats based on current game level
     	int improveRatio = 10-faction;//makes it so that enemies are a little better than players during current level if they spawn at the same time
     	if(Game.gameLevel <= 10) {
     		improveRatio = Game.gameLevel-faction; 
     	}   	
-    	basehp = basehp + 3*improveRatio;
+    	basehp = basehp + 3*improveRatio *( (int) Math.floor(numOfTrainingGrounds * 0.5) );
     	hp = basehp;
-    	atk += (int) 2.5*improveRatio;
-    	def += (int) 2.5*improveRatio;
+    	atk += (int) 2.5*improveRatio *( (int) Math.floor(numOfTrainingGrounds * 0.5) );
+    	def += (int) 2.5*improveRatio*( (int) Math.floor(numOfTrainingGrounds * 0.5) );
     }
     
     public void getCost() {

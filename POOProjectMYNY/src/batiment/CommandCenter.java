@@ -7,7 +7,7 @@ public class CommandCenter extends Generator {
 	
 	public CommandCenter() {
 		this.icon = "C";
-		this.type = "CommandCenter";
+		this.type = "Command Center";
 		this.basehp = 250;
 		this.hp = basehp;
 		this.x = 0;

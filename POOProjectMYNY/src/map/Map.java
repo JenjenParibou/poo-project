@@ -32,7 +32,7 @@ public class Map {
 		for (int i = 0; i< MAX_CASES; i++) {
 			for (int j = 0; j< MAX_CASES; j++) {
 				Grid[i][j] = new Terrain(); //getTileReal didn't work here oddly
-				getTileReal(i,j).setTypeRandom();//I love java cause I can just do this
+				getTileReal(i,j).setTypeRandom();
 			}
 		}
 		getTileFromCenter(0,0).setType("Grass");//Forcing type of center to "Grass"
