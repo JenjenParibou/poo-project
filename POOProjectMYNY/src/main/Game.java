@@ -4,6 +4,7 @@ import ressources.*;
 import map.Map;
 import units.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -12,9 +13,12 @@ public class Game {
 	static public ArrayList<Batiment> gameBuildings = new ArrayList<Batiment>();//current buildings
 	static public ArrayList<Unit> playerUnits = new ArrayList<>();//player buildings
 	static public ArrayList<Unit> enemyUnits = new ArrayList<>();//enemy buildings
-
+	static public int PLAYER_FACTION = 1;
+	static public int ENEMY_FACTION = 0;
+	static public int NEUTRAL_FACTION = -1;
 	static public Scanner sc = new Scanner(System.in);
-	static public int x,y;
+	static public int x,y, id;
+	static public Unit u; 
 	
 	static public boolean command(String com) {//true ends turn, false doesn't
 		switch(com.toLowerCase()) {
@@ -28,6 +32,7 @@ public class Game {
 		case("u"):
 		case("units"):
 		case("unit"): //just for testing
+			if (!enemyUnits.isEmpty()) {System.out.println("You cannot deploy units during a fight!"); return false;}
 			if (!trainingCampExists()) {
 				System.out.println("Cannot deploy units without a training camp.");
 				return false;
@@ -38,34 +43,66 @@ public class Game {
 			System.out.println("Y value of unit?");
 			y = sc.nextInt();
 			sc.nextLine();
-			System.out.println("What to build?");
+			System.out.println("Which unit to deploy? (Soldier, Archer, Eagle)" );
 			String unit = sc.nextLine();
-			return addUnit(unit,x,y,1);
+			return addUnit(unit,x,y,PLAYER_FACTION);
+		case("b"):
 		case("build"):
+			if (!enemyUnits.isEmpty()) {System.out.println("You cannot build during a fight!"); return false;}
 			System.out.println("X value of building?");
 			x = sc.nextInt();
 			sc.nextLine();
 			System.out.println("Y value of building?");
 			y = sc.nextInt();
 			sc.nextLine();
-			System.out.println("What to build?");
+			System.out.println("What to build? (Training Ground, Farm, Sawmill, Quarry)");
 			String building = sc.nextLine();
 			return addBuilding(building, x, y);
 		case("map"):
 			Map.getMap();
 			return false;
 		case("stats"):
-			ressources.afficher();
+			ressources.showRessources();
 			return false;
+		case("sk"):
 		case("skip"):
 			return true;
+		case("m"):
 		case("move"):
-			System.out.println("Please type out the id of the desired unit.");
-			int id = sc.nextInt();
+			System.out.println("Please type out the id of the unit you wish to move.");
+			id = sc.nextInt();
 			sc.nextLine();
-			Unit u = findUnitThroughID(id,playerUnits);
+			u = findUnitThroughID(id,playerUnits);
 			if (u == null) {System.out.println("This id does not exist."); return false;}
 			return playerMoveUnit(u);
+		case("a"):
+		case("atk"):
+		case("attack"):
+			System.out.println("Please type out the id of your attacking unit.");
+			id = sc.nextInt();
+			sc.nextLine();
+			u = findUnitThroughID(id,playerUnits);
+			if (u == null) {System.out.println("This id does not exist."); return false;}
+			return attackUnits(u);
+		case("stats unit"):
+		case("sunit"):
+		case("su"):
+			System.out.println("Please type out the id of your attacking unit.");
+			id = sc.nextInt();
+			sc.nextLine();
+			u = findUnitThroughID(id,playerUnits);
+			if (u == null)
+				u = findUnitThroughID(id,enemyUnits);
+			if (u == null) {System.out.println("This id does not exist."); return false;}
+			u.showStats();
+			return false;
+		case("command center"):
+		case("command"):
+		case("com"):
+		case("c"):
+			x = Map.getTileFromCenter(0, 0).getElement().hp;
+			System.out.println("Your Command Center has " + ConsoleColors.RED + x + ConsoleColors.RESET + " HP left.");
+			return false;
 		default:
 			System.out.println("Unknown command.");
 			return false;
@@ -74,22 +111,22 @@ public class Game {
 	
 ////////////////////// CHECK IF ELEMENT CAN BE ADDED //////////////////////
 	
-	static public boolean canAddElem(int x,int y, boolean waterProof, int oneIfFriendly) {//checks if its possible to add an element in that position
-		if (!Map.inRange(x, y, oneIfFriendly)) {
-			if (oneIfFriendly == 1)
+	static public boolean canAddElem(int x,int y, boolean waterProof, int faction) {//checks if its possible to add an element in that position
+		if (!Map.inRange(x, y, faction)) {
+			if (faction == PLAYER_FACTION)
 				System.out.println("Tile is not currently visible."); 
 			return false;
 			} 
 			
 		if (!Map.getTileFromCenter(x, y).isEmpty()) {
-			if (oneIfFriendly == 1)
+			if (faction == PLAYER_FACTION)
 				System.out.println("Tile is already occupied.");
 			 
 			return false;
 			} 
 		
-		if(oneIfFriendly == 1 && Map.getTileFromCenter(x, y).getType() == "Water" && !waterProof) {
-			System.out.println("This cannot go on a water tile.");		
+		if(faction == PLAYER_FACTION && !Map.getTileFromCenter(x, y).isAccessible && !waterProof) {
+			System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
 			return false;			
 			}	
 		
@@ -98,7 +135,7 @@ public class Game {
 	
 ////////////////////// BUILDING STUFF //////////////////////
 	static boolean addBuilding(String build, int x, int y) {
-		if (!canAddElem(x,y, false, 1)) {
+		if (!canAddElem(x,y, false, PLAYER_FACTION)) {
 			return false;}
 		
 		switch(build.toLowerCase()) {
@@ -138,16 +175,17 @@ public class Game {
 ////////////////////// UNIT STUFF //////////////////////
 	
 	static public boolean addUnit(String unitToAdd, int x, int y,int faction) {// adds unit at pos (x,y) belonging to faction 1 or -1 (player or computer)
-				
+	//This is so that the player can add a function just by inputing its name, hence the string			
 		switch(unitToAdd.toLowerCase()) {
 			case("s"):
 			case("soldier"):
 			case("soldat"):
 				return addUnit(new Soldat(), x, y, faction);//function to make code more readable	
 			case("a"):
-			case("Archer"):
-				return addUnit(new Archer(), x, y, faction);//function to make code more readable
-			case("Aigle"):
+			case("archer"):
+				return addUnit(new Archer(), x, y, faction);//function to make code more readable		
+			case("e"):
+			case("eagle"):
 				return addUnit(new Aigle(), x, y, faction);//function to make code more readable
 			default:
 				System.out.println("Not a unit, please try again.");
@@ -155,36 +193,42 @@ public class Game {
 			}
 	}
 	
-	static boolean addUnit(Unit u, int x, int y,  int faction) {//adds the unit to both the map and the 
+	static boolean addUnit(Unit u, int x, int y,  int faction) {//actually adds the unit to both the map and its respective unit array
 		if (!canAddElem(x,y, u.aerial, faction)) {//checks if element can be added here instead of the previous function because the object already exists, therefor we can use its aerial value
 			u = null;//hacky way to delete an object in java, should get eaten by the garbage collector as nothing references it elsewhere
+			Unit.numOfUnits--;
 			return false;
 			}
 		
-		for (String i: u.cost.keySet()) {
-			if (ressources.currentRessources.get(i) < u.cost.get(i)) {
-				System.out.println("You need: " + (u.cost.get(i) -ressources.currentRessources.get(i)) +" of \""+i+"\" in order to deploy this unit.");
-				return false;
+		if (faction == PLAYER_FACTION) { //only consumes ressources if friendly unit
+			for (String i: u.cost.keySet()) {
+				if (ressources.currentRessources.get(i) < u.cost.get(i)) {//checks a ressource common to both currentRessources and unit.cost and see if ressources is bigger
+					System.out.println("You need: " + (u.cost.get(i) -ressources.currentRessources.get(i)) +" of \""+i+"\" in order to deploy this unit.");
+					return false;
+				}
 			}
+			for (String i: u.cost.keySet()) {
+				if (ressources.currentRessources.get(i) < u.cost.get(i)) {
+					ressources.consume(i, u.cost.get(i));
+				}
+			}	
 		}
-		for (String i: u.cost.keySet()) {
-			if (ressources.currentRessources.get(i) < u.cost.get(i)) {
-				ressources.consume(i, u.cost.get(i));
-			}
-		}	
+		u.assignIcon(faction);//This is mostly so that friendly units can be green and enemy units red
+		//must be called before being added to the map or else the icon won't be shown on the map as the old one has already been stored
+		u.train();//make stats better
 		Map.getTileFromCenter(x, y).placeElement(u, faction);
 		u.x = x;
 		u.y = y;
 		u.faction = faction;
-		if(faction == 1) {
+		if(faction == PLAYER_FACTION) {
 			playerUnits.add(u);
 		} else
 			enemyUnits.add(u);
-		Map.getMap();
 		return true; 	
 	}
 		
-	
+////////////////////// UPDATING ARRAYS //////////////////////
+
 	
 	static public void updateUnit(Unit unit, ArrayList<Unit> u) {
 		for (Unit i: u) {
@@ -201,6 +245,9 @@ public class Game {
 		}
 	}
 	
+////////////////////// TRAINING CAMP //////////////////////
+
+	
 	static public boolean trainingCampExists() {
 		for (Batiment i: gameBuildings) {
 			if (i.type == "Training Ground") {
@@ -209,6 +256,9 @@ public class Game {
 		}
 		return false;
 	}
+	
+////////////////////// FIND UNIT THROUGH ID IN THE LIST //////////////////////
+
 	
 	static Unit findUnitThroughID(int id, ArrayList<Unit> u) {
 		for (Unit i: u) {
@@ -219,16 +269,18 @@ public class Game {
 		return null;
 	}
 	
+////////////////////// MOVE UNITS //////////////////////
+
 	static boolean playerMoveUnit(Unit u) {
 		System.out.println("In what direction? (Up, Down, left, right)");
 		String direction = sc.nextLine();
 		int rangeChosen = 1;
-		if(u.range>1) {
+		if(u.spd>1) {
 			do {
-				System.out.println("By how many squares? (value can go between 1 and " + u.range + ").");
+				System.out.println("By how many squares? (value can go between 1 and " + u.spd + ").");
 				rangeChosen = sc.nextInt();
 				sc.nextLine();
-			} while (rangeChosen < 1 && rangeChosen > u.range);
+			} while (rangeChosen < 1 || rangeChosen > u.spd);
 		}
 		switch(direction.toLowerCase()) {
 		case("u"):
@@ -252,8 +304,132 @@ public class Game {
 	
 	
 	
+	
 	////////////////////// ENEMY STUFF //////////////////////
 	
 	
+	static public boolean attackUnits(Unit u) {// if there is a unit to attack, attack it
+		ArrayList<Unit> pT = new ArrayList<Unit>();// list that will get filled up will all units around attacking unit
+		u.checkForUnits(pT);
+		if (pT.size() == 0) {//no unit was found
+			if(u.faction == PLAYER_FACTION)
+				System.out.println("Couldn't find units to attack.");	
+			return false;
+			}
+		
+		Unit u2; //target unit
+		
+		if (pT.size() == 1) { //check if there's only 1 unit to attack
+			u2 = pT.getFirst();
+			} else { //more than one
+				if(u.faction == PLAYER_FACTION) {//player gets to choose who to attack
+					do {
+						System.out.println("Type out the id of the enemy unit you wish to attack. (type -1 to cancel the attack, this will not end your turn)");
+						id = sc.nextInt();
+						sc.nextLine();
+						if (id == -1) {
+							System.out.println("Attack has been cancelled.");
+							return false;
+						}		
+						u2 = findUnitThroughID(id, pT);
+						if (u2 == null)
+							System.out.println("No enemies around your unit with such an id.");
+					} while(u2 == null);
+					
+				} else // enemy has to choose who to attack
+					u2 = lowestHP(pT);// get unit with lowest hp
+			}
+		
+		
+		int damage = u.Attacking(u2);
+		if (damage>0) {
+			System.out.println(u.icon + " dealt " +ConsoleColors.RED+ damage + ConsoleColors.RESET+ " damage to " + u2.icon + "!");
+			Game.wait(100);
+		}
+		return true;
+	}
 	
+	
+	static Unit lowestHP(ArrayList<Unit> pT) {//returns unit with the lowest hp in a list
+		Unit lowestHP = pT.getFirst();
+		for (Unit i: pT) {
+			if (lowestHP.hp>i.hp)
+				lowestHP = i;
+		}
+		return lowestHP;	
+	}
+
+
+////////////////////// ENEMY SPAWNING //////////////////////
+
+	static void spawnEnemy() {
+		switch(gameLevel) {
+		case 1:
+			Game.addUnit("Soldier", -2, -Map.visibleGrid, ENEMY_FACTION);
+			break;
+		case 2:
+			Game.addUnit("Soldier", -3, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 3, -Map.visibleGrid, ENEMY_FACTION);
+			break;
+		case 3:
+			Game.addUnit("Soldier", -2, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 2, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
+			break;
+		case 4:
+			Game.addUnit("Soldier", -4, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 4, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Archer", 2, Map.visibleGrid, ENEMY_FACTION);
+			break;
+		case 5:
+			Game.addUnit("Eagle",Map.visibleGrid , -3, ENEMY_FACTION);
+			Game.addUnit("Eagle",-Map.visibleGrid , 3, ENEMY_FACTION);
+
+		default:
+			Game.addUnit("Soldier", -3, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 3, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Archer", 3, -Map.visibleGrid, ENEMY_FACTION);
+			break;
+		}
+		
+		Map.getMap();
+	}
+
+	
+	
+	
+	
+	
+	
+////////////////////// LEVEL INCREASE //////////////////////
+
+	static void levelIncrease() {
+		gameLevel++;
+		for (Unit i: playerUnits) {
+			i.train();
+			i.hp = i.basehp;
+			System.out.println(i.icon + " has trained! here are their stats: ");
+			i.showStats();
+			wait(100);
+		}
+		if (gameLevel <= 10 && gameLevel % 2 == 0) {
+			Map.visibleGrid++;
+			System.out.println("Your influence grows, and with it, so does your territory:");
+		}
+		
+	}
+	
+	
+	
+	
+	public static void wait(int ms) {//function to wait in ms
+	    try
+	    {
+	        Thread.sleep(ms);
+	    }
+	    catch(InterruptedException ex)
+	    {
+	        Thread.currentThread().interrupt();
+	    }
+	}
 }

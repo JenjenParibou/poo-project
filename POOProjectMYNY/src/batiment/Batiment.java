@@ -37,6 +37,8 @@ public abstract class Batiment extends Element { //implementing Element interfac
 	public void setHp(int hp) {
 		this.hp = hp;
 	}
+	
+    
 	public void function() {}
 	
 	public void function(int r) {}

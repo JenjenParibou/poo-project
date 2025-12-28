@@ -2,6 +2,8 @@ package map;
 import java.util.LinkedHashMap;
 import units.*;
 import main.ConsoleColors;
+import main.Game;
+
 import java.util.ArrayList;
 import java.math.*;
 import batiment.*;
@@ -13,11 +15,11 @@ public class Terrain { //each cell of the grid is a terrain
 	String type; 
 	String icon = "   "; //icon of current building or unit
 	String color;// green brackets for grass, blue for water..
-	int faction = -1; // -1 by default, 1 or 0 depending on who owns it and has a building on it, can't build stuff on it if it's already owned
+	public int faction = Game.NEUTRAL_FACTION; // -1 by default, 1 or 0 depending on who owns it and has a building on it, can't build stuff on it if it's already owned
 	public double bonus = 1.5; // mult that increases based on what's happpening?
 	ArrayList<Element> currentElement = new ArrayList<Element>();
 	//list that holds 1 element: either a building or a unit. can only hold one element (for now)
-	
+	public boolean isAccessible = true;
 	
 	
 	public Terrain() {
@@ -83,7 +85,16 @@ public class Terrain { //each cell of the grid is a terrain
 				addedTo += possibleTypes.get(i);
 			}
 			
-		}	
+		}
+		
+		
+		switch(type) {//put here all elements you wish to remain inaccessible
+		//case("Lava"):
+		case("Water"):
+			isAccessible = false;
+			break;
+		}
+		
 		possibleTypes.clear();
 		
 	}
@@ -107,7 +118,7 @@ public class Terrain { //each cell of the grid is a terrain
 		if (!currentElement.isEmpty()) {
 			currentElement.removeFirst();
 			icon = "   ";
-			faction = -1;
+			faction = Game.NEUTRAL_FACTION;
 		}
 	}
 	

@@ -2,6 +2,7 @@ package map;
 import batiment.CommandCenter;
 import main.ConsoleColors;
 import main.Game;
+import main.Main;
 
 import java.math.*;
 
@@ -9,10 +10,10 @@ import java.math.*;
 
 
 public class Map {
-	static final int MAX_CASES = 51; // Must be an odd number
-	static final int CENTER = (MAX_CASES - 1) / 2; // or 26 in algorithmic language
+	static final int MAX_CASES = 25; // Must be an odd number
+	static public final int CENTER = (MAX_CASES - 1) / 2; // or 26 in algorithmic language
 	static Terrain[][] Grid = new Terrain[MAX_CASES][MAX_CASES];// array[n*n] of Terrain
-	static int visibleGrid = 3; // how many cells are visible around the center
+	public static int visibleGrid = 3; // how many cells are visible around the center
 	// will grow every level to signify you taking areas
 
 	
@@ -40,6 +41,8 @@ public class Map {
 		Game.gameBuildings.add(cc);
 	}
 	
+	/////////////////////////////////
+	
 	static public int westNorthLimit() { // if Center = 25 and visible grid = 3, returns 22 (leftmost / uppermost visible cell)
 		return (CENTER - visibleGrid);
 		// this is also how we return fog tiles
@@ -50,28 +53,37 @@ public class Map {
 		// this is also how we return fog tiles
 	}
 	
-	static public boolean inRange(int x, int y, int oneIfFriendly) { // checks if something of an x and y value is inside the visible array
-		return ((int)Math.abs(x)<= (visibleGrid- oneIfFriendly) && (int) Math.abs(y) <= (visibleGrid-oneIfFriendly) ); // -1 cause we don't want you to place stuff on the purple tiles_
-		// OneIfFriendly: set to 1 if element you wish to add is friendly, 0 if it's not
-	}
+	/////////////////////////////////We can combine west and north / east and south since the visible array is a swear
+
 	
-	static public boolean onFogTile(int x, int y) {//returns true if this position (relative to center) is on a fog tile
+	static public boolean inRange(int x, int y, int oneIfFriendly) { // checks if something of an x and y value is allowed to be on that position
+		return ((int)Math.abs(x)<= (visibleGrid- oneIfFriendly) && (int) Math.abs(y) <= (visibleGrid-oneIfFriendly) );
+		// OneIfFriendly: set to 1 if element you wish to add is friendly, 0 if it's an enemy
+	}
+	//Basically, friendly units do NOT have access to the visible map's edges (purple tiles), so their effective action range is the currently visible grid - 1 (as if the we had trimmed the edges of the map for them)
+	
+	
+	static public boolean onFogTile(int x, int y) {//returns true if this position (relative to center) is on the border of the visible map
 		return (x == eastSouthLimit() || x == westNorthLimit() || y == eastSouthLimit()|| y == westNorthLimit());
 	}
 	
 	static public void getMap() { // print viewable map, will get called each turn
 		System.out.print("\n");//can't use println so I do a new line this manually
 		for (int i = westNorthLimit() ; i <= eastSouthLimit(); i++) { // "go from the upmost visible row to the downmost"
-			for (int j =  westNorthLimit(); j<=eastSouthLimit(); j++) {// "go from the leftmost visible row to the rightmost"
+			for (int j =  westNorthLimit(); j<=eastSouthLimit(); j++) {// "go from the leftmost visible column to the rightmost"
+				// Print( "[ " + Icon of current element + " ]") while also coloring the brackets depending on the type of terrain / if terrain is foggy
+				String color = getTileReal(i,j).color;
+				String iconToPrint = getTileReal(i,j).icon;
 				
-				if(onFogTile(i,j)) {
-				System.out.print(ConsoleColors.colorText("[", ConsoleColors.PURPLE) + getTileReal(i,j).icon + ConsoleColors.colorText("]",ConsoleColors.PURPLE)); // colours edges of border purple (think of it as fog), this is where enemeies will spawn
-				} else {
-					
-					System.out.print(ConsoleColors.colorText("[", getTileReal(i,j).color) + getTileReal(i,j).icon + ConsoleColors.colorText("]", getTileReal(i,j).color));
-					
+				if(onFogTile(i,j)) {color = ConsoleColors.PURPLE;}
+				if (Main.gameOver == true) {//makes map look completely purple with red icons if defeated
+					color = ConsoleColors.PURPLE;
+					iconToPrint = ConsoleColors.RED + iconToPrint + ConsoleColors.RESET;
 				}
-				// Print( "[ " + Icon of current element + " ]") while also coloring the brackets depending on the type of terrain
+					
+				// colours edges of border purple (think of it as fog), this is where enemeies will spawn	
+				System.out.print(ConsoleColors.colorText("[", color) + iconToPrint + ConsoleColors.colorText("]",color)); 
+				// will print [ ICON ] for every tile, while coloring brackets according to "color"
 			}
 			System.out.print("\n"); //new line once we do every column of a row
 		}

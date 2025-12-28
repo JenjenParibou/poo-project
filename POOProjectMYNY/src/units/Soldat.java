@@ -5,13 +5,14 @@ import main.ConsoleColors;
 public class Soldat extends Unit {
     public Soldat() {
     	this.icon = "S";
-    	this.basehp = 100;
+    	this.basehp = 50;
         this.hp = basehp;
         this.atk = 30;
-        this.def = 20;
+        this.def = 10;
         this.spd = 1; //speed is how many tiles of the map a unit can move per turn
         this.range = 1; //range is how many tiles the enemy has to be away to be attacked
         this.type = "Soldat";
+        this.elementType = "Unit";
         this.aerial = false;
         this.cost.put("Gold", 20);
         this.cost.put("Food", 20);
@@ -19,7 +20,6 @@ public class Soldat extends Unit {
         id = numOfUnits;
         numOfUnits++;
         if(numOfUnits>99) {numOfUnits=0;}
-        this.icon = icon +ConsoleColors.colorText(String.format("%02d", id), ConsoleColors.PURPLE) ; 
     }
 
 }

@@ -9,13 +9,13 @@ public class ressources {
     static public HashMap<String, Integer> currentRessources= new HashMap<>();
 
     static public void addRessources() { // adds all ressources, put it at the start of main
-        currentRessources.put("Wood",10);
-        currentRessources.put("Stone",10);
-        currentRessources.put("Gold",100);
-        currentRessources.put("Food",10);
+        currentRessources.put("Wood",1000);
+        currentRessources.put("Stone",1000);
+        currentRessources.put("Gold",1000);
+        currentRessources.put("Food",1000);
           }
 
-//    // Add a new ressource type
+//     Add a new ressource type
 //    public void addResourceType(String type) {
 //        currentRessources.putIfAbsent(type, 0);
 //    }
@@ -43,7 +43,7 @@ public class ressources {
     }
 // prints out the types and values
     
- static public void afficher() {
+ static public void showRessources() {
 	 for (String i: currentRessources.keySet()) {
 	        System.out.println(ConsoleColors.YELLOW + i  + ": " +ConsoleColors.RESET+ currentRessources.get(i));
 	    }
