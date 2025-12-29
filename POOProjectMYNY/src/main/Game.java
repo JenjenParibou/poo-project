@@ -38,11 +38,9 @@ public class Game implements ConsoleColors {
 				return false;
 				}
 			System.out.println("X value of unit?");
-			x = sc.nextInt();
-			sc.nextLine();//consumes the new line to not run into type mismatch 
+			x = scanInt();
 			System.out.println("Y value of unit?");
-			y = sc.nextInt();
-			sc.nextLine();
+			y = scanInt();
 			System.out.println("Which unit to deploy? (Soldier, Archer, Eagle)" );
 			String unit = sc.nextLine();
 			return addUnit(unit,x,y,PLAYER_FACTION);
@@ -50,11 +48,9 @@ public class Game implements ConsoleColors {
 		case("build"):
 			if (!enemyUnits.isEmpty()) {System.out.println("You cannot build during a fight!"); return false;}
 			System.out.println("X value of building?");
-			x = sc.nextInt();
-			sc.nextLine();
+			x = scanInt();
 			System.out.println("Y value of building?");
-			y = sc.nextInt();
-			sc.nextLine();
+			y = scanInt();
 			System.out.println("What to build? (Training Ground, Farm, Sawmill, Quarry)");
 			String building = sc.nextLine();
 			return addBuilding(building, x, y);
@@ -71,8 +67,7 @@ public class Game implements ConsoleColors {
 		case("m"):
 		case("move"):
 			System.out.println("Please type out the id of the unit you wish to move.");
-			id = sc.nextInt();
-			sc.nextLine();
+			id = scanInt();
 			u = findUnitThroughID(id,playerUnits);
 			if (u == null) {System.out.println("This id does not exist."); return false;}
 			return playerMoveUnit(u);
@@ -80,8 +75,7 @@ public class Game implements ConsoleColors {
 		case("atk"):
 		case("attack"):
 			System.out.println("Please type out the id of your attacking unit.");
-			id = sc.nextInt();
-			sc.nextLine();
+			id = scanInt();
 			u = findUnitThroughID(id,playerUnits);
 			if (u == null) {System.out.println("This id does not exist."); return false;}
 			return attackUnits(u);
@@ -89,8 +83,7 @@ public class Game implements ConsoleColors {
 		case("sunit"):
 		case("su"):
 			System.out.println("Please type out the id of your attacking unit.");
-			id = sc.nextInt();
-			sc.nextLine();
+			id = scanInt();
 			u = findUnitThroughID(id,playerUnits);
 			if (u == null)
 				u = findUnitThroughID(id,enemyUnits);
@@ -280,8 +273,7 @@ public class Game implements ConsoleColors {
 		if(u.spd>1) {
 			do {
 				System.out.println("By how many squares? (value can go between 1 and " + u.spd + ").");
-				rangeChosen = sc.nextInt();
-				sc.nextLine();
+				rangeChosen = scanInt();
 			} while (rangeChosen < 1 || rangeChosen > u.spd);
 		}
 		switch(direction.toLowerCase()) {
@@ -327,7 +319,7 @@ public class Game implements ConsoleColors {
 				if(u.faction == PLAYER_FACTION) {//player gets to choose who to attack
 					do {
 						System.out.println("Type out the id of the enemy unit you wish to attack. (type -1 to cancel the attack, this will not end your turn)");
-						id = sc.nextInt();
+						id = scanInt();
 						sc.nextLine();
 						if (id == -1) {
 							System.out.println("Attack has been cancelled.");
@@ -454,4 +446,25 @@ public class Game implements ConsoleColors {
 	        Thread.currentThread().interrupt();
 	    }
 	}
+
+
+	public static int scanInt() {//scan ints and makes sure they are actually ints, won't throw errors that way
+		
+		int y = 0;
+		boolean isNum;
+		do {
+			String x = sc.nextLine();	
+			try {
+				y = Integer.parseInt(x);
+				isNum = true;
+			} catch (NumberFormatException e) {
+				isNum = false;
+			}
+		} while (isNum == false);
+		
+		return y;
+	}
 }
+
+
+

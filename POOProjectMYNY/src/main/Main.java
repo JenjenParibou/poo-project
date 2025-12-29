@@ -8,7 +8,7 @@ import map.*; //imports all map related classes, use it for other packages like 
 import ressources.ressources;
 import units.Unit;
 
-public class Main implements ConsoleColors {
+public class Main extends Game implements ConsoleColors {
 	
 	public static int turnsBeforeFight = 10; //turns before enemies spawn
 	public static boolean gameOver = false;
@@ -30,10 +30,10 @@ public class Main implements ConsoleColors {
 		Scanner sc = new Scanner(System.in);
 		
 		logo(); // procedure that draws the game's logo
-		print("1. New Game. \n2. Load. (Currently not availible) \n3. Quit.");
+		print("1. New  \n2. Load. (Currently not availible) \n3. Quit.");
 		print("Please choose an option by typing a number."); 
 		
-		do { op = sc.nextInt();sc.nextLine(); // User is prompted to type a number
+		do { op = scanInt(); // User is prompted to type a number
 		//nextLine followed by nextInt to avoid \n and inputmismatch errors
 		} while (op < 1 || op > 3); //User may only type a number between 1 and 3
 		
@@ -46,7 +46,7 @@ public class Main implements ConsoleColors {
 			break;
 		case 3:
 			print("See you later!");
-			System.exit(0); //ends game.
+			System.exit(0); //ends 
 		}
 	}
 	
@@ -57,8 +57,8 @@ public class Main implements ConsoleColors {
 		print("And thus, your legend begins.");
 
 		ressources.addRessources();
-		//Game.addUnit("Soldier", 2, -1, 1);
-		//Game.addUnit("Archer", -2, -1, 0);
+		//addUnit("Soldier", 2, -1, 1);
+		//addUnit("Archer", -2, -1, 0);
 
 		Map.getMap();
 
@@ -80,7 +80,7 @@ public class Main implements ConsoleColors {
 			print("What will you do?");
 
 			commande = sc.nextLine();//get input from player
-			advancer = Game.command(commande);//the game class will output accordingly
+			advancer = command(commande);//the game class will output accordingly
 			//advancer will be set to true if the player's input is a turn ending action, for example placing a building
 			//advancer will be set to false if the player's input isn't a turn ending action, for example viewing the map
 			if(advancer) {
@@ -93,14 +93,14 @@ public class Main implements ConsoleColors {
 
 			if (turnsBeforeFight == 0) {
 				print(RED +"THE ENEMY HAS ARRIVED"+ RESET);
-				Game.spawnEnemy();
+				spawnEnemy();
 				turnsBeforeFight--;
 			}
 
-			if (turnsBeforeFight < 0 && Game.enemyUnits.isEmpty()) {
+			if (turnsBeforeFight < 0 && enemyUnits.isEmpty()) {
 				System.out.println("The enemy has been vanquished!");
-				Game.wait(100);
-				Game.levelIncrease();
+				wait(100);
+				levelIncrease();
 				turnsBeforeFight = 10;
 				Map.getMap();
 			}
@@ -110,26 +110,26 @@ public class Main implements ConsoleColors {
 		
 		
 		System.out.println("And so ends your tale.\nGAME OVER");
-		System.exit(0); //ends game.
+		System.exit(0); //ends 
 	}
 	
 	 static public void turnActions(){
 		 
-		 deathBatiment(Game.gameBuildings);//removes any buildings with 0 hp
+		 deathBatiment(gameBuildings);//removes any buildings with 0 hp
 		 
 		 if(!gameOver) {//only execures rest of commands if command center is still alive	
 			 boolean unitDiedDuringThatTurn = false;
-			 unitDiedDuringThatTurn = deathUnit(Game.playerUnits);
-			 deathUnit(Game.enemyUnits);
+			 unitDiedDuringThatTurn = deathUnit(playerUnits);
+			 deathUnit(enemyUnits);
 			 
 			 HashMap<String, Integer> oldRessources= new HashMap<>();//to check wether resources will change this turn
 			 oldRessources.putAll(ressources.currentRessources);
 	
-			 if(!Game.enemyUnits.isEmpty() && unitDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
+			 if(!enemyUnits.isEmpty() && unitDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
 				 enemyMovement();	
 			 
-			 if(Game.enemyUnits.isEmpty()) {//only generate ressources if no enemies
-				 for(Batiment i: Game.gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
+			 if(enemyUnits.isEmpty()) {//only generate ressources if no enemies
+				 for(Batiment i: gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
 					 if (i.buildTime>0) {
 					 System.out.println(RED + i.type + " is still under construction..."+RESET);
 					 i.buildTime--;
@@ -159,16 +159,16 @@ public class Main implements ConsoleColors {
 					System.out.print("\n" + RED);
 					for (char c : "THE COMMAND CENTER HAS BEEN DESTROYED".toCharArray()) {
 					    System.out.print(c);
-					    Game.wait(200);
+					    wait(200);
 					}
 					
-					Game.wait(2000);
+					wait(2000);
 					System.out.print("\n" + RESET);
 					break;
 				}
 				System.out.print(b.get(i).icon + " has been destroyed." );
-				Game.wait(100);
-			 	Game.gameBuildings.remove(i);
+				wait(100);
+			 	gameBuildings.remove(i);
 			 }
 		 }
 	}
@@ -182,7 +182,7 @@ public class Main implements ConsoleColors {
 			 	Map.getMap();
 			 	System.out.print(RESET + "\n");
 			 	System.out.print(u.get(i).icon + " has perished." );
-			 	Game.wait(100);
+			 	wait(100);
 			 	u.remove(i);
 			 	unitDied = true;
 			 }
@@ -192,8 +192,8 @@ public class Main implements ConsoleColors {
 	
 	
 	static void enemyMovement() {
-		Unit u = Game.enemyUnits.getFirst();
-		if (!Game.attackUnits(u)) {//only move if no opposing units around you
+		Unit u = enemyUnits.getFirst();
+		if (!attackUnits(u)) {//only move if no opposing units around you
 			if (u.range != 1) { // if unit has a range above 1 square, try to find command center
 				if (Math.abs(u.x) - u.range <= 0 && Math.abs(u.y) - u.range <= 0) {//if centre de commande in range, attack it
 					u.Attacking((Batiment)Map.getTileFromCenter(0, 0).getElement());
