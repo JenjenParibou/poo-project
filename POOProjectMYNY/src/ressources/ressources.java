@@ -3,7 +3,7 @@ package ressources;
 import java.util.HashMap;
 import main.ConsoleColors;
 
-public class ressources {
+public class ressources implements ConsoleColors{
 
 
     static public HashMap<String, Integer> currentRessources= new HashMap<>();
@@ -45,7 +45,7 @@ public class ressources {
     
  static public void showRessources() {
 	 for (String i: currentRessources.keySet()) {
-	        System.out.println(ConsoleColors.YELLOW + i  + ": " +ConsoleColors.RESET+ currentRessources.get(i));
+	        System.out.println(YELLOW + i  + ": " +RESET+ currentRessources.get(i));
 	    }
  }
 

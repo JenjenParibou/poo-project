@@ -9,7 +9,7 @@ import java.math.*;
 import batiment.*;
 
 
-public class Terrain { //each cell of the grid is a terrain
+public class Terrain implements ConsoleColors { //each cell of the grid is a terrain
 	//String[] possibleTypes = {"Grass", "Mountain", "Desert", "Water"};
 	
 	String type; 
@@ -35,16 +35,16 @@ public class Terrain { //each cell of the grid is a terrain
 	public void setColour() { //sets text colour
 	switch(type) {
 		case("Grass"):
-			color = ConsoleColors.GREEN;
+			color = GREEN;
 			break;
 		case("Mountain"):
-			color = ConsoleColors.RESET;
+			color = RESET;
 		break;
 		case("Forest"):
-			color = ConsoleColors.YELLOW;
+			color = YELLOW;
 		break;
 		case("Water"):
-			color = ConsoleColors.CYAN;
+			color = CYAN;
 		break;
 	}
 }
@@ -54,7 +54,7 @@ public class Terrain { //each cell of the grid is a terrain
 //	public void setIcon(String faction) {
 //		switch(currentElement.getFirst().type) {
 //			case("Soldat"):
-//				icon = faction + "S" + ConsoleColors.RESET;
+//				icon = faction + "S" + RESET;
 //				break;
 //			default:
 //				icon = " ";

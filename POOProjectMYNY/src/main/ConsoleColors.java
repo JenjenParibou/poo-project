@@ -1,6 +1,6 @@
 package main;
 
-public class ConsoleColors {
+public interface ConsoleColors {
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset
 
@@ -75,7 +75,5 @@ public class ConsoleColors {
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
     
     
-    public static String colorText(String s, String colour){
-    	return (colour + s + RESET);
-    }
+
 }

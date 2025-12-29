@@ -9,7 +9,7 @@ import java.math.*;
 
 
 
-public class Map {
+public class Map implements ConsoleColors {
 	static final int MAX_CASES = 25; // Must be an odd number
 	static public final int CENTER = (MAX_CASES - 1) / 2; // or 26 in algorithmic language
 	static Terrain[][] Grid = new Terrain[MAX_CASES][MAX_CASES];// array[n*n] of Terrain
@@ -82,7 +82,7 @@ public class Map {
 				}
 					
 				// colours edges of border purple (think of it as fog), this is where enemeies will spawn	
-				System.out.print(ConsoleColors.colorText("[", color) + iconToPrint + ConsoleColors.colorText("]",color)); 
+				System.out.print(color + "["+ ConsoleColors.RESET + iconToPrint + color +"]"+ ConsoleColors.RESET); 
 				// will print [ ICON ] for every tile, while coloring brackets according to "color"
 			}
 			System.out.print("\n"); //new line once we do every column of a row

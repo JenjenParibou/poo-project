@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Game {
+public class Game implements ConsoleColors {
 	static public int gameLevel = 1;
 	static public ArrayList<Batiment> gameBuildings = new ArrayList<Batiment>();//current buildings
 	static public ArrayList<Unit> playerUnits = new ArrayList<>();//player buildings
@@ -102,7 +102,7 @@ public class Game {
 		case("com"):
 		case("c"):
 			x = Map.getTileFromCenter(0, 0).getElement().hp;
-			System.out.println("Your Command Center has " + ConsoleColors.RED + x + ConsoleColors.RESET + " HP left.");
+			System.out.println("Your Command Center has " + RED + x + RESET + " HP left.");
 			return false;
 		default:
 			System.out.println("Unknown command.");
@@ -345,7 +345,7 @@ public class Game {
 		
 		int damage = u.Attacking(u2);
 		if (damage>0) {
-			System.out.println(u.icon + " dealt " +ConsoleColors.RED+ damage + ConsoleColors.RESET+ " damage to " + u2.icon + "!");
+			System.out.println(u.icon + " dealt " +RED+ damage + RESET+ " damage to " + u2.icon + "!");
 			Game.wait(100);
 		}
 		return true;

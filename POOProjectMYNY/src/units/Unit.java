@@ -8,7 +8,7 @@ import batiment.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class Unit extends Element{
+public abstract class Unit extends Element implements ConsoleColors{
     // stats of each unit
     public int atk, def, spd, range,  id, faction, basehp, lifetime;
     public boolean aerial;
@@ -66,11 +66,11 @@ public abstract class Unit extends Element{
     }
     
     public void showStats() {
-    	System.out.println(ConsoleColors.GREEN + "Health: " + ConsoleColors.RESET + hp);
-    	System.out.println(ConsoleColors.GREEN + "Attack: " + ConsoleColors.RESET + atk);
-    	System.out.println(ConsoleColors.GREEN + "Defense: " + ConsoleColors.RESET + def);
-    	System.out.println(ConsoleColors.GREEN + "Speed: " + ConsoleColors.RESET + spd);
-    	System.out.println(ConsoleColors.GREEN + "Range: " + ConsoleColors.RESET + range);
+    	System.out.println(GREEN + "Health: " + RESET + hp);
+    	System.out.println(GREEN + "Attack: " + RESET + atk);
+    	System.out.println(GREEN + "Defense: " + RESET + def);
+    	System.out.println(GREEN + "Speed: " + RESET + spd);
+    	System.out.println(GREEN + "Range: " + RESET + range);
     }
     
     public void train( int numOfTrainingGrounds) { // improves stats based on current game level
@@ -86,7 +86,7 @@ public abstract class Unit extends Element{
     
     public void getCost() {
    	 for (String i: cost.keySet()) {
-   	        System.out.println(ConsoleColors.GREEN + i  + " cost: " +ConsoleColors.RESET+ cost.get(i));
+   	        System.out.println(GREEN + i  + " cost: " +RESET+ cost.get(i));
    	    }
     }
 
@@ -159,7 +159,7 @@ public abstract class Unit extends Element{
         Game.updateBuilding(cible, Game.gameBuildings);
     	Map.getMap();
     	if (damage>0) {
-			System.out.println(this.icon + " dealt " +ConsoleColors.RED+ damage + ConsoleColors.RESET+ " damage to" + cible.type + "!");
+			System.out.println(this.icon + " dealt " +RED+ damage + RESET+ " damage to" + cible.type + "!");
 			Game.wait(100);
 		}
         return damage;
@@ -179,9 +179,9 @@ public abstract class Unit extends Element{
     
     public void assignIcon(int faction) {
     	if (faction == Game.PLAYER_FACTION)
-            this.icon = ConsoleColors.GREEN + icon +ConsoleColors.colorText(String.format("%02d", id), ConsoleColors.GREEN_UNDERLINED);
+            this.icon = GREEN + icon + GREEN_UNDERLINED + String.format("%02d", id)+ RESET;
     	else
-            this.icon = ConsoleColors.RED + icon +ConsoleColors.colorText(String.format("%02d", id), ConsoleColors.RED_UNDERLINED);
+            this.icon = RED + icon + RED_UNDERLINED + String.format("%02d", id)+ RESET;
     } //String.format("%02d", id) will print the id with in 2 digits, that way the tile size will be consistent while showcasing up to 100 units at once
     
     

@@ -8,7 +8,7 @@ import map.*; //imports all map related classes, use it for other packages like 
 import ressources.ressources;
 import units.Unit;
 
-public class Main {
+public class Main implements ConsoleColors {
 	
 	public static int turnsBeforeFight = 10; //turns before enemies spawn
 	public static boolean gameOver = false;
@@ -73,9 +73,9 @@ public class Main {
 		while (!gameOver) {
 			System.out.print("\n");
 			if(turnsBeforeFight> 1) 
-				print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turns left before the enemy arrives...");
+				print(RED +turnsBeforeFight+ RESET + " turns left before the enemy arrives...");
 			else if (turnsBeforeFight== 1) 
-				print(ConsoleColors.RED +turnsBeforeFight+ ConsoleColors.RESET + " turn left.");
+				print(RED +turnsBeforeFight+ RESET + " turn left.");
 
 			print("What will you do?");
 
@@ -92,7 +92,7 @@ public class Main {
 			}
 
 			if (turnsBeforeFight == 0) {
-				print(ConsoleColors.RED +"THE ENEMY HAS ARRIVED"+ ConsoleColors.RESET);
+				print(RED +"THE ENEMY HAS ARRIVED"+ RESET);
 				Game.spawnEnemy();
 				turnsBeforeFight--;
 			}
@@ -131,7 +131,7 @@ public class Main {
 			 if(Game.enemyUnits.isEmpty()) {
 				 for(Batiment i: Game.gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
 					 if (i.buildTime>0) {
-					 System.out.println(ConsoleColors.RED + i.type + " is still under construction..."+ConsoleColors.RESET);
+					 System.out.println(RED + i.type + " is still under construction..."+RESET);
 					 i.buildTime--;
 					 }else {i.function(10);}
 				 }
@@ -139,7 +139,7 @@ public class Main {
 				 for (String i : ressources.currentRessources.keySet()) {//print resource value if it changed this turn
 					 if (ressources.currentRessources.get(i) > oldRessources.get(i)) {
 						 	int amount = ressources.currentRessources.get(i) - oldRessources.get(i);
-							System.out.println(ConsoleColors.YELLOW+"Generated " + amount + " " + i + "!"+ConsoleColors.RESET);
+							System.out.println(YELLOW+"Generated " + amount + " " + i + "!"+RESET);
 					 }
 				 }
 			 }	  
@@ -155,15 +155,15 @@ public class Main {
 				if (b.get(i).type == "Command Center") {//if the destroyed building was the command center, end game
 					gameOver = true;
 					Map.getMap();
-					//System.out.println(ConsoleColors.RED + "THE COMMAND CENTER HAS BEEN DESTROYED" + ConsoleColors.RESET);
-					System.out.print("\n" + ConsoleColors.RED);
+					//System.out.println(RED + "THE COMMAND CENTER HAS BEEN DESTROYED" + RESET);
+					System.out.print("\n" + RED);
 					for (char c : "THE COMMAND CENTER HAS BEEN DESTROYED".toCharArray()) {
 					    System.out.print(c);
 					    Game.wait(200);
 					}
 					
 					Game.wait(2000);
-					System.out.print("\n" + ConsoleColors.RESET);
+					System.out.print("\n" + RESET);
 					break;
 				}
 				System.out.print(b.get(i).icon + " has been destroyed." );
@@ -180,7 +180,7 @@ public class Main {
 			 if(u.get(i).hp <= 0) {	 
 				Map.getTileFromCenter(u.get(i).x, u.get(i).y).removeElement();	
 			 	Map.getMap();
-			 	System.out.print(ConsoleColors.RESET + "\n");
+			 	System.out.print(RESET + "\n");
 			 	System.out.print(u.get(i).icon + " has perished." );
 			 	Game.wait(100);
 			 	u.remove(i);
