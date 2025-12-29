@@ -19,9 +19,16 @@ public class CommandCenter extends Generator {
 		this.elementType = "Building";
 		this.icon = " " + icon + " ";
 		}	    
-	public void function(int r){		
-			ressources.gather( ressourceType, Game.gameBuildings.size() * r);
-			//System.out.println(ConsoleColors.YELLOW +"Generated " + (int) Game.gameBuildings.size() * r+ " " + ressourceType + "!"+ConsoleColors.RESET );
+	public void function(int r){	
+		int numOfFinishedBuildings = 0;
+		
+		for (Batiment i: Game.gameBuildings) {
+			if (i.buildTime <= 0)
+				numOfFinishedBuildings++;
+			}
+		
+		ressources.gather( ressourceType, numOfFinishedBuildings * r);
+		//System.out.println(ConsoleColors.YELLOW +"Generated " + (int) Game.gameBuildings.size() * r+ " " + ressourceType + "!"+ConsoleColors.RESET );
 	}
 
 }

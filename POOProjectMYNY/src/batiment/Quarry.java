@@ -10,7 +10,7 @@ public class Quarry extends Generator{
 		this.basehp= 90;
 		this.hp= basehp;
 		this.ressourceType= "Stone";
-		this.icon = "S";
+		this.icon = "Q";
 		this.preferredTerrain = "Mountain";
 		this.id = numOfBuildings;
 		numOfBuildings++;

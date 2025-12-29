@@ -34,7 +34,7 @@ public class Game implements ConsoleColors {
 		case("unit"): 
 			if (!enemyUnits.isEmpty()) {System.out.println("You cannot deploy units during a fight!"); return false;}
 			if (!trainingCampExists()) {
-				System.out.println("Cannot deploy units without a training camp.");
+				System.out.println("Cannot deploy units without a working training camp.");
 				return false;
 				}
 			System.out.println("X value of unit?");
@@ -252,7 +252,7 @@ public class Game implements ConsoleColors {
 	
 	static public boolean trainingCampExists() {
 		for (Batiment i: gameBuildings) {
-			if (i.type == "Training Ground") {
+			if (i.type == "Training Ground" || i.buildTime <= 0) {
 				return true;
 			}
 		}

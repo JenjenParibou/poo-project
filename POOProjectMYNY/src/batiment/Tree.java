@@ -10,7 +10,7 @@ public class Tree extends Generator{
 		this.basehp= 90;
 		this.hp= basehp;
 		this.ressourceType= "Wood";
-		this.icon = "W";
+		this.icon = "S";
 		this.preferredTerrain = "Forest";
 		this.id = numOfBuildings;
 		numOfBuildings++;

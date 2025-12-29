@@ -128,7 +128,7 @@ public class Main implements ConsoleColors {
 			 if(!Game.enemyUnits.isEmpty() && unitDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
 				 enemyMovement();	
 			 
-			 if(Game.enemyUnits.isEmpty()) {
+			 if(Game.enemyUnits.isEmpty()) {//only generate ressources if no enemies
 				 for(Batiment i: Game.gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
 					 if (i.buildTime>0) {
 					 System.out.println(RED + i.type + " is still under construction..."+RESET);
