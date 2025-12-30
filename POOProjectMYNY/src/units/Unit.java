@@ -14,7 +14,7 @@ public abstract class Unit extends Element implements ConsoleColors{
     public boolean aerial;
     public static int numOfUnits;
     public HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed
-    
+    public boolean marine = false; //marine units can only be placed on water tiles
 
     public boolean isAerial() {
         return aerial;
@@ -172,7 +172,7 @@ public abstract class Unit extends Element implements ConsoleColors{
     
     
     public boolean moveTo(int x, int y) {
-    	if(!Game.canAddElem(this.x + x, this.y+y, aerial, this.faction)) {System.out.println("Couldn't move unit.");return false;}
+    	if(!Game.canAddElem(this.x + x, this.y+y, aerial, this.faction, false)) {System.out.println("Couldn't move unit.");return false;}
     	Map.getTileFromCenter(this.x + x, this.y + y).placeElement(this, faction);
     	Map.getTileFromCenter(this.x, this.y).removeElement();
     	this.x += x;

@@ -58,7 +58,7 @@ public class Main extends Game implements ConsoleColors {
 
 		ressources.addRessources();
 		//addUnit("Soldier", 2, -2, ENEMY_FACTION);
-		//addUnit("Soldier", 2, 0, ENEMY_FACTION);
+		addUnit("Soldier", 2, 0, ENEMY_FACTION);
 
 		
 

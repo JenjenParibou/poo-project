@@ -1,6 +1,6 @@
 package units;
 
-import main.ConsoleColors;
+
 
 public class Aigle extends Unit {
     public Aigle() {
@@ -10,7 +10,7 @@ public class Aigle extends Unit {
         this.atk = 20;
         this.def = 15;
         this.spd = 2; //speed is how many tiles of the map a unit can move per turn
-        this.range = 1; //range is how many tiles the enemy has to be away to be attacked
+        this.range = 2; //range is how many tiles the enemy has to be away to be attacked
         this.type = "Aigle";
         this.elementType = "Unit";
         this.aerial = true; //aerial troops can fly over water

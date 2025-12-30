@@ -1,6 +1,6 @@
 package units;
 
-import main.ConsoleColors;
+
 
 public class Archer extends Unit {
     public Archer() {
@@ -16,7 +16,7 @@ public class Archer extends Unit {
         this.aerial = false;
         this.cost.put("Gold", 50);
         this.cost.put("Food", 30);
-        this.cost.put("Wood", 100);
+        this.cost.put("Wood", 70);
         id = numOfUnits;
         numOfUnits++;
         if(numOfUnits>99) {numOfUnits=0;}

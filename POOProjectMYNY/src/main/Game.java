@@ -105,7 +105,7 @@ public class Game implements ConsoleColors {
 	
 ////////////////////// CHECK IF ELEMENT CAN BE ADDED //////////////////////
 	
-	static public boolean canAddElem(int x,int y, boolean waterProof, int faction) {//checks if its possible to add an element in that position
+	static public boolean canAddElem(int x,int y, boolean waterProof, int faction, boolean marine) {//checks if its possible to add an element in that position
 		if (!Map.inRange(x, y, faction)) {
 			if (faction == PLAYER_FACTION)
 				System.out.println("Tile is not currently visible."); 
@@ -123,13 +123,17 @@ public class Game implements ConsoleColors {
 			System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
 			return false;			
 			}	
-		
+		//if unit is a fish, it can only be placed in water
+		if(faction == PLAYER_FACTION && Map.getTileFromCenter(x, y).isAccessible && marine) {
+			System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
+			return false;			
+			}
 		return true;					
 	}
 	
 ////////////////////// BUILDING STUFF //////////////////////
 	static boolean addBuilding(String build, int x, int y) {
-		if (!canAddElem(x,y, false, PLAYER_FACTION)) {
+		if (!canAddElem(x,y, false, PLAYER_FACTION, false)) {
 			return false;}
 		
 		switch(build.toLowerCase()) {
@@ -183,7 +187,14 @@ public class Game implements ConsoleColors {
 				return addUnit(new Archer(), x, y, faction);//function to make code more readable		
 			case("e"):
 			case("eagle"):
+			case("aigle"):
 				return addUnit(new Aigle(), x, y, faction);//function to make code more readable
+			case("f"):
+			case("fish"):
+				return addUnit(new Fish(), x, y, faction);//function to make code more readable	
+			case("g"):
+			case("giant"):
+				return addUnit(new Giant(), x, y, faction);//function to make code more readable
 			default:
 				System.out.println("Not a unit, please try again.");
 				return false;
@@ -191,7 +202,7 @@ public class Game implements ConsoleColors {
 	}
 	
 	static boolean addUnit(Unit u, int x, int y,  int faction) {//actually adds the unit to both the map and its respective unit array
-		if (!canAddElem(x,y, u.aerial, faction)) {//checks if element can be added here instead of the previous function because the object already exists, therefor we can use its aerial value
+		if (!canAddElem(x,y, u.aerial, faction, u.marine)) {//checks if element can be added here instead of the previous function because the object already exists, therefor we can use its aerial value
 			u = null;//hacky way to delete an object in java, should get eaten by the garbage collector as nothing references it elsewhere
 			Unit.numOfUnits--;
 			return false;
@@ -271,6 +282,10 @@ public class Game implements ConsoleColors {
 ////////////////////// MOVE UNITS //////////////////////
 
 	static boolean playerMoveUnit(Unit u) {
+		if(u.spd == 0) {
+			System.out.println("This unit cannot move.");
+			return false;
+		}
 		System.out.println("In what direction? (Up, Down, left, right)");
 		String direction = sc.nextLine();
 		int rangeChosen = 1;
@@ -279,7 +294,7 @@ public class Game implements ConsoleColors {
 				System.out.println("By how many squares? (value can go between 1 and " + u.spd + ").");
 				rangeChosen = scanInt();
 			} while (rangeChosen < 1 || rangeChosen > u.spd);
-		}
+		} 
 		switch(direction.toLowerCase()) {
 		case("u"):
 		case("up"):
@@ -367,11 +382,11 @@ public class Game implements ConsoleColors {
 			break;
 		case 2:
 			Game.addUnit("Soldier", -3, -Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", 3, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Archer", 3, -Map.visibleGrid, ENEMY_FACTION);
 			break;
 		case 3:
 			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", -2, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Eagle", -2, -Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Soldier", 2, -Map.visibleGrid, ENEMY_FACTION);
 
 			break;
@@ -382,9 +397,9 @@ public class Game implements ConsoleColors {
 			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
 			break;
 		case 5:
-			Game.addUnit("Eagle",Map.visibleGrid , -4, ENEMY_FACTION);
+			Game.addUnit("Archer",Map.visibleGrid , -4, ENEMY_FACTION);
 			Game.addUnit("Soldier", Map.visibleGrid,-2, ENEMY_FACTION);
-			Game.addUnit("Eagle",-Map.visibleGrid , 3, ENEMY_FACTION);
+			Game.addUnit("Soldier",-Map.visibleGrid , 3, ENEMY_FACTION);
 			Game.addUnit("Soldier", 1, -Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Archer", -1, -Map.visibleGrid, ENEMY_FACTION);
 			break;
@@ -392,7 +407,7 @@ public class Game implements ConsoleColors {
 			Game.addUnit("Archer",4, Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",Map.visibleGrid-1 , Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",-Map.visibleGrid+1, Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Soldier",Map.visibleGrid-1 , -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Eagle",Map.visibleGrid-1 , -Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",-Map.visibleGrid+1, -Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Archer",-4, -Map.visibleGrid , ENEMY_FACTION);
 			break;
@@ -402,7 +417,7 @@ public class Game implements ConsoleColors {
 			Game.addUnit("Archer",0, Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",0, -Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Eagle",-3 , -Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Soldier",3 , -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Giant",3 , -Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Eagle",3 , Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",-3 , Map.visibleGrid , ENEMY_FACTION);
 			System.out.println(RED + "Final Wave." + RESET);
@@ -511,23 +526,59 @@ public class Game implements ConsoleColors {
 				}
 			}
 			
-			if (!hasAttacked) {
+			if (!hasAttacked) { 
 				int movX=0, movY=0;// by how much unit will move in x xor y
-				if (u.y<0) {
+				if (u.y<0) {  
+					if (u.getType() != "Aigle") {
 					movY = 1;// move down if command center below you
-					// if tile below you has an enemy unit, don't move there, otherwise movY = 1			
-					}
+					} else { // check if the command center is 1 tile away so it doesnt overshoot
+						if (u.y +2 <=0) { 
+							movY = 2;
+						} else {
+							movY = 1;
+						}
+									
+					}}
 				else if (u.y>0) {
+					if (u.getType() != "Aigle") {
 					movY = -1;//move up if command center above you
+					} else { // check if the command center is 1 tile away so it doesnt overshoot
+						if (u.y -2 >=0) { 
+							movY = -2;
+						} else {
+							movY = -1;
+						}
+									
+					}
+					 
 					}
 				else if (u.x <0) {
+					if (u.getType() != "Aigle") {
+					movX = 1;// if on the same row as command center, move towards it
+					} else { // check if the command center is 1 tile away so it doesnt overshoot
+						if (u.x +2 <=0) { 
+							movX = 2;
+						} else {
+							movX = 1;
+						}
+									
+					}
 					movX = 1;// if on the same row as command center, move towards it
 					}
-				else {
+				else { if (u.getType() != "Aigle") {
 					movX = -1;
+					} else { // check if the command center is 1 tile away so it doesnt overshoot
+						if (u.x -2 >=0) { 
+							movX = -2;
+						} else {
+							movX = -1;
+						}
+									
+					}
 					}
 	
 					if (!Map.getTileFromCenter(u.x + movX, u.y + movY).isEmpty()) {//if the tile we wish to move to isn't empty (contains a building)
+
 							if (Map.getTileFromCenter(u.x+movX, u.y + movY).getElement().elementType == "Building") {
 								u.Attacking((Batiment)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement()); // we know it's a building because we used attackUnits earlier so we can use (Batiment)
 							} else {
