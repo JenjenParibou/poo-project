@@ -118,16 +118,16 @@ public class Game implements ConsoleColors {
 			 
 			return false;
 			} 
+		if(faction == PLAYER_FACTION && Map.getTileFromCenter(x, y).isAccessible && marine) {
+				System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
+			return false;			
+				}
 		
 		if(faction == PLAYER_FACTION && !Map.getTileFromCenter(x, y).isAccessible && !waterProof) {
 			System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
 			return false;			
 			}	
 		//if unit is a fish, it can only be placed in water
-		if(faction == PLAYER_FACTION && Map.getTileFromCenter(x, y).isAccessible && marine) {
-			System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
-			return false;			
-			}
 		return true;					
 	}
 	
