@@ -105,7 +105,7 @@ public class Game implements ConsoleColors {
 	
 ////////////////////// CHECK IF ELEMENT CAN BE ADDED //////////////////////
 	
-	static public boolean canAddElem(int x,int y, boolean waterProof, int faction, boolean marine) {//checks if its possible to add an element in that position
+	static public boolean canAddElem(int x,int y, boolean aerial, int faction, boolean marine) {//checks if its possible to add an element in that position
 		if (!Map.inRange(x, y, faction)) {
 			if (faction == PLAYER_FACTION)
 				System.out.println("Tile is not currently visible."); 
@@ -117,13 +117,13 @@ public class Game implements ConsoleColors {
 				System.out.println("Tile is already occupied.");
 			 
 			return false;
-			} 
-		if(faction == PLAYER_FACTION && Map.getTileFromCenter(x, y).isAccessible && marine) {
+			} 	
+		if(faction == PLAYER_FACTION && Map.getTileFromCenter(x, y).isAccessible && marine ) {
 				System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
 			return false;			
 				}
 		
-		if(faction == PLAYER_FACTION && !Map.getTileFromCenter(x, y).isAccessible && !waterProof) {
+		if(faction == PLAYER_FACTION && !Map.getTileFromCenter(x, y).isAccessible && !aerial && !marine) {
 			System.out.println("You cannot place this unit on " + Map.getTileFromCenter(x, y).getType() + " tiles.");		
 			return false;			
 			}	
