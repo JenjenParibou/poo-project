@@ -10,11 +10,11 @@ import units.Unit;
 
 public class Main extends Game implements ConsoleColors {
 	
-	public static int turnsBeforeFight = 8; //turns before enemies spawn
+	public static int turnsBeforeFight = 10; //turns before enemies spawn
 	public static boolean gameOver = false;
 	
 	static public void main(String[] args) {
-		//titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
+		titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
 		game();//will start the game
 	}
 	
