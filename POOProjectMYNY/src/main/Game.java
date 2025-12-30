@@ -4,7 +4,6 @@ import ressources.*;
 import map.Map;
 import units.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -59,7 +58,10 @@ public class Game implements ConsoleColors {
 			return false;
 		case("stats"):
 		case("stat"):
+			System.out.println("Current level: " + gameLevel);
 			ressources.showRessources();
+			x = Map.getTileFromCenter(0, 0).getElement().hp;
+			System.out.println("Your Command Center has " + RED + x + RESET + " HP left.");
 			return false;
 		case("sk"):
 		case("skip"):
@@ -89,13 +91,6 @@ public class Game implements ConsoleColors {
 				u = findUnitThroughID(id,enemyUnits);
 			if (u == null) {System.out.println("This id does not exist."); return false;}
 			u.showStats();
-			return false;
-		case("command center"):
-		case("command"):
-		case("com"):
-		case("c"):
-			x = Map.getTileFromCenter(0, 0).getElement().hp;
-			System.out.println("Your Command Center has " + RED + x + RESET + " HP left.");
 			return false;
 		default:
 			System.out.println("Unknown command.");
@@ -446,7 +441,7 @@ public class Game implements ConsoleColors {
 			 oldRessources.putAll(ressources.currentRessources);
 	
 			 if(!enemyUnits.isEmpty() && playerElementDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
-				 enemyMovement(enemyUnits.getFirst());	
+				 enemyMovement(enemyUnits.getFirst(), enemyUnits.getFirst().spd);	
 			 
 			 if(enemyUnits.isEmpty()) {//only generate ressources if no enemies
 				 for(Batiment i: gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
@@ -516,7 +511,7 @@ public class Game implements ConsoleColors {
 	}
 	
 	
-	static void enemyMovement(Unit u) {
+	static void enemyMovement(Unit u, int speed) {
 		if (!attackUnits(u)) {//only move if no opposing units around you
 			boolean hasAttacked = false;
 			if (u.range != 1) { // if unit has a range above 1 square, try to find command center
@@ -526,70 +521,83 @@ public class Game implements ConsoleColors {
 				}
 			}
 			
-			if (!hasAttacked) { 
+			if (!hasAttacked) {
 				int movX=0, movY=0;// by how much unit will move in x xor y
-				if (u.y<0) {  
-					if (u.getType() != "Aigle") {
-					movY = 1;// move down if command center below you
-					} else { // check if the command center is 1 tile away so it doesnt overshoot
-						if (u.y +2 <=0) { 
-							movY = 2;
-						} else {
-							movY = 1;
+				if (u.y<0) {// check if command center below you
+					for(int i = speed; i>0; i--) {
+						if (u.y+ i <= 0) {
+							movY = i;
+							System.out.println(movY);
+
+							break;
+							}	
 						}
-									
-					}}
-				else if (u.y>0) {
-					if (u.getType() != "Aigle") {
-					movY = -1;//move up if command center above you
-					} else { // check if the command center is 1 tile away so it doesnt overshoot
-						if (u.y -2 >=0) { 
-							movY = -2;
-						} else {
-							movY = -1;
-						}
-									
 					}
-					 
+				else if (u.y>0) {
+					for(int i = speed; i>0; i--) {
+						if (u.y- i >= 0) {
+							movY = -i;
+							System.out.println(movY);
+
+							break;
+							}					
+						}
 					}
 				else if (u.x <0) {
-					if (u.getType() != "Aigle") {
-					movX = 1;// if on the same row as command center, move towards it
-					} else { // check if the command center is 1 tile away so it doesnt overshoot
-						if (u.x +2 <=0) { 
-							movX = 2;
-						} else {
-							movX = 1;
+					for(int i = speed; i>0; i--) {
+						if (u.x+ i <= 0) {
+							movX = i;
+							System.out.println(movX);
+							break;
+							}					
 						}
-									
 					}
-					movX = 1;// if on the same row as command center, move towards it
-					}
-				else { if (u.getType() != "Aigle") {
-					movX = -1;
-					} else { // check if the command center is 1 tile away so it doesnt overshoot
-						if (u.x -2 >=0) { 
-							movX = -2;
-						} else {
-							movX = -1;
+				else {
+					for(int i = speed; i>0; i--) {
+						if (u.x- i >= 0) {
+							movX = -i;
+							System.out.println(movX);
+							break;
+							}					
 						}
-									
 					}
-					}
-	
-					if (!Map.getTileFromCenter(u.x + movX, u.y + movY).isEmpty()) {//if the tile we wish to move to isn't empty (contains a building)
+				
+				////////
 
-							if (Map.getTileFromCenter(u.x+movX, u.y + movY).getElement().elementType == "Building") {
-								u.Attacking((Batiment)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement()); // we know it's a building because we used attackUnits earlier so we can use (Batiment)
-							} else {
-								enemyMovement((Unit)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement());
-								}
-					} else {// tile is empty
-						u.moveTo(movX, movY);	
-						}	
+				while ( (movX < -1 || movX > 1) && !Map.getTileFromCenter(u.x + movX, u.y + movY).isEmpty()) {
+					int dec =(int) -Math.signum(movX);
+					movX += dec;
+						
 				}
+
+				
+
+				while ( (movY < -1 || movY > 1) && !Map.getTileFromCenter(u.x + movX, u.y + movY).isEmpty()) {
+					int dec =(int) -Math.signum(movY);
+					movY += dec;
+				}
+
+				///////
+				
+				if (!Map.getTileFromCenter(u.x + movX, u.y + movY).isEmpty()) {//if the tile we wish to move to isn't empty (contains a building)				
+					if (Map.getTileFromCenter(u.x + movX, u.y + movY).getElement().elementType == "Building") {	
+						u.Attacking((Batiment)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement()); // we know it's a building because we used attackUnits earlier so we can use (Batiment)	
+					} else {
+						Unit u2 = (Unit)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement();
+						if (u2.faction == ENEMY_FACTION) {
+							enemyMovement(u2, u2.spd);
+						} else {
+							enemyMovement(u, u.spd - 1);
+						}
+							
+					}
+				} else {// tile is empty
+					u.moveTo(movX, movY);			
+				}		
 			}
-		}	
+		}
+	}
+	
 		
 	
 	
@@ -600,12 +608,11 @@ public class Game implements ConsoleColors {
 
 	static void levelIncrease() {
 		gameLevel++;
+		System.out.println("You've reached level " + gameLevel + "!" );
 		if (gameLevel == endLevel) {
 			System.out.println("You've conquered the enemy! Bask in golry as your kingdom remains undefeated for the rest of times!");
 			Main.gameOver = true;
 		} else {
-				
-			
 			int numOfTrainingGrounds = 0;
 			for (Batiment i: gameBuildings) {
 				if (i.type == "Training Ground")

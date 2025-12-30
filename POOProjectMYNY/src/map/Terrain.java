@@ -1,12 +1,11 @@
 package map;
 import java.util.LinkedHashMap;
-import units.*;
+
 import main.ConsoleColors;
 import main.Game;
 
 import java.util.ArrayList;
-import java.math.*;
-import batiment.*;
+
 
 
 public class Terrain implements ConsoleColors { //each cell of the grid is a terrain

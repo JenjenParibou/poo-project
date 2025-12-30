@@ -14,11 +14,10 @@ public class Giant extends Unit {
         this.type = "Giant";
         this.elementType = "Unit";
         this.aerial = false;
-        this.marine = false;
-        this.cost.put("Gold", 40);
+        this.cost.put("Gold", 250);
         this.cost.put("Food", 100);
-        this.cost.put("Stone", 10);
-        this.cost.put("Wood", 50);
+        this.cost.put("Stone", 250);
+        this.cost.put("Wood", 100);
         id = numOfUnits;
         numOfUnits++;
         if(numOfUnits>99) {numOfUnits=0;}

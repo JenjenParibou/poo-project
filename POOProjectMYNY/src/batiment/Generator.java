@@ -1,5 +1,4 @@
 package batiment;
-import main.ConsoleColors;
 import map.Map;
 import ressources.ressources;
 

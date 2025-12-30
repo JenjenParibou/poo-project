@@ -15,9 +15,8 @@ public class Fish extends Unit {
         this.elementType = "Unit";
         this.aerial = false;//aerial troops can fly over water
         this.marine = true; 
-        this.cost.put("Gold", 50);
+        this.cost.put("Gold", 100);
         this.cost.put("Food", 50);
-        this.cost.put("Stone", 0);
         this.cost.put("Wood", 10);
         id = numOfUnits;
         numOfUnits++;

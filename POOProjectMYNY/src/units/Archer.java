@@ -8,7 +8,7 @@ public class Archer extends Unit {
         this.basehp = 40;
         this.hp = basehp;
         this.atk = 25;
-        this.def = 20;
+        this.def = 7;
         this.spd = 1; //speed is how many tiles of the map a unit can move per turn
         this.range = 3; //range is how many tiles the enemy has to be away to be attacked
         this.type = "Archer";
@@ -21,5 +21,4 @@ public class Archer extends Unit {
         numOfUnits++;
         if(numOfUnits>99) {numOfUnits=0;}
     }
-
 }

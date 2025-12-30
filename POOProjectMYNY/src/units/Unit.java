@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public abstract class Unit extends Element implements ConsoleColors{
     // stats of each unit
-    public int atk, def, spd, range,  id, faction, basehp, lifetime;
+    public int atk, def, spd, range,  id, faction, basehp;
     public boolean aerial;
     public static int numOfUnits;
     public HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed

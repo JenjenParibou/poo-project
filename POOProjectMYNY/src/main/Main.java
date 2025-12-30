@@ -1,12 +1,9 @@
 package main;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import batiment.*;
 import map.*; //imports all map related classes, use it for other packages like troops, exp...
 import ressources.ressources;
-import units.Unit;
+
 
 public class Main extends Game implements ConsoleColors {
 	
@@ -58,8 +55,9 @@ public class Main extends Game implements ConsoleColors {
 
 		ressources.addRessources();
 		//addUnit("Soldier", 2, -2, ENEMY_FACTION);
-		//addUnit("Soldier", 2, 0, ENEMY_FACTION);
-		//addUnit("Eagle", 3	, -Map.visibleGrid, ENEMY_FACTION);
+//		addUnit("Soldier", -2, 1, PLAYER_FACTION);
+//		addUnit("Eagle",-2, Map.visibleGrid, ENEMY_FACTION);
+//		addBuilding("Quarry", -2, 1);
 		
 
 		Map.getMap();
