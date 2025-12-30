@@ -10,11 +10,11 @@ import units.Unit;
 
 public class Main extends Game implements ConsoleColors {
 	
-	public static int turnsBeforeFight = 10; //turns before enemies spawn
+	public static int turnsBeforeFight = 8; //turns before enemies spawn
 	public static boolean gameOver = false;
 	
 	static public void main(String[] args) {
-		titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
+		//titleScreen(); //procedure that contains what happens on the title screen, comment it out for quick start of game
 		game();//will start the game
 	}
 	
@@ -57,8 +57,10 @@ public class Main extends Game implements ConsoleColors {
 		print("And thus, your legend begins.");
 
 		ressources.addRessources();
-		//addUnit("Soldier", 2, -1, 1);
-		//addUnit("Archer", -2, -1, 0);
+		//addUnit("Soldier", 2, -2, ENEMY_FACTION);
+		//addUnit("Soldier", 2, 0, ENEMY_FACTION);
+
+		
 
 		Map.getMap();
 
@@ -112,122 +114,6 @@ public class Main extends Game implements ConsoleColors {
 		System.out.println("And so ends your tale.\nGAME OVER");
 		System.exit(0); //ends 
 	}
-	
-	 static public void turnActions(){
-		 
-		 deathBatiment(gameBuildings);//removes any buildings with 0 hp
-		 
-		 if(!gameOver) {//only execures rest of commands if command center is still alive	
-			 boolean unitDiedDuringThatTurn = false;
-			 unitDiedDuringThatTurn = deathUnit(playerUnits);
-			 deathUnit(enemyUnits);
-			 
-			 HashMap<String, Integer> oldRessources= new HashMap<>();//to check wether resources will change this turn
-			 oldRessources.putAll(ressources.currentRessources);
-	
-			 if(!enemyUnits.isEmpty() && unitDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
-				 enemyMovement();	
-			 
-			 if(enemyUnits.isEmpty()) {//only generate ressources if no enemies
-				 for(Batiment i: gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
-					 if (i.buildTime>0) {
-					 System.out.println(RED + i.type + " is still under construction..."+RESET);
-					 i.buildTime--;
-					 }else {i.function(10);}
-				 }
-				 
-				 for (String i : ressources.currentRessources.keySet()) {//print resource value if it changed this turn
-					 if (ressources.currentRessources.get(i) > oldRessources.get(i)) {
-						 	int amount = ressources.currentRessources.get(i) - oldRessources.get(i);
-							System.out.println(YELLOW+"Generated " + amount + " " + i + "!"+RESET);
-					 }
-				 }
-			 }	  
-		 }
-	}
-	 
-	 
-	 
-	static void deathBatiment(ArrayList<Batiment> b) {
-		for(int i = b.size() - 1; i>= 0; i--) {
-			 if(b.get(i).hp <= 0) {
-				Map.getTileFromCenter(b.get(i).x, b.get(i).y).removeElement();
-				if (b.get(i).type == "Command Center") {//if the destroyed building was the command center, end game
-					gameOver = true;
-					Map.getMap();
-					//System.out.println(RED + "THE COMMAND CENTER HAS BEEN DESTROYED" + RESET);
-					System.out.print("\n" + RED);
-					for (char c : "THE COMMAND CENTER HAS BEEN DESTROYED".toCharArray()) {
-					    System.out.print(c);
-					    wait(200);
-					}
-					
-					wait(2000);
-					System.out.print("\n" + RESET);
-					break;
-				}
-				System.out.print(b.get(i).icon + " has been destroyed." );
-				wait(100);
-			 	gameBuildings.remove(i);
-			 }
-		 }
-	}
-	
-	
-	static boolean deathUnit(ArrayList<Unit> u) {
-		boolean unitDied = false;
-		for(int i = u.size() - 1; i>= 0; i--) {
-			 if(u.get(i).hp <= 0) {	 
-				Map.getTileFromCenter(u.get(i).x, u.get(i).y).removeElement();	
-			 	Map.getMap();
-			 	System.out.print(RESET + "\n");
-			 	System.out.print(u.get(i).icon + " has perished." );
-			 	wait(100);
-			 	u.remove(i);
-			 	unitDied = true;
-			 }
-		 }
-		return unitDied;
-	}
-	
-	
-	static void enemyMovement() {
-		Unit u = enemyUnits.getFirst();
-		if (!attackUnits(u)) {//only move if no opposing units around you
-			if (u.range != 1) { // if unit has a range above 1 square, try to find command center
-				if (Math.abs(u.x) - u.range <= 0 && Math.abs(u.y) - u.range <= 0) {//if centre de commande in range, attack it
-					u.Attacking((Batiment)Map.getTileFromCenter(0, 0).getElement());
-				}
-			} else {
-			int movX=0, movY=0;// by how much unit will move in x xor y
-			if (u.y<0)
-				if (Map.getTileFromCenter(u.x, u.y + 1).isEmpty() || (!Map.getTileFromCenter(u.x, u.y + 1).isEmpty() && Map.getTileFromCenter(u.x, u.y + 1).getElement().elementType == "Building"))
-					// if tile below you has an enemy unit, don't move there, otherwise movY = 1
-					movY = 1;// move down if command center below you
-			else if (u.y>0)
-				if (Map.getTileFromCenter(u.x, u.y + 1).isEmpty() || (!Map.getTileFromCenter(u.x, u.y + 1).isEmpty() && Map.getTileFromCenter(u.x, u.y + 1).getElement().elementType == "Building"))
-					movY = -1;//move up if command center above you
-			else if (u.x <0)
-				movX = 1;// if on the same row as command center, move towards it
-			else
-				movX = -1;		
-
-			if (!Map.getTileFromCenter(u.x+movX, u.y + movY).isEmpty()) {//if the tile we wish to move to isn't empty (contains a building)
-				u.Attacking((Batiment)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement()); // we know it's a building because we used attackUnits earlier so we can use (Batiment)
-			} else {// tile is empty
-				u.moveTo(movX, movY);	
-			}	
-		
-		}
-		}
-		
-	}
-	
-	
-	
-	
-	
-	
 	
 	
 	static public void logo() {

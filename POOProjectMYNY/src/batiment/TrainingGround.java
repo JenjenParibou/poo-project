@@ -7,7 +7,7 @@ public class TrainingGround extends Batiment{
 		this.elementType = "Building";
 		this.cost= 100;
 	    this.buildTime= 2;
-	    this.basehp = 150;
+	    this.basehp = 100;
 	    this.hp= basehp;
 	    this.icon = "T";
 	    this.icon = " " + icon + " ";

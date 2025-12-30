@@ -12,7 +12,6 @@ public abstract class Unit extends Element implements ConsoleColors{
     // stats of each unit
     public int atk, def, spd, range,  id, faction, basehp, lifetime;
     public boolean aerial;
-    public String type = "Unit";
     public static int numOfUnits;
     public HashMap<String, Integer> cost= new HashMap<>();// units can need multiple ressources in order to be deployed
     
@@ -77,11 +76,18 @@ public abstract class Unit extends Element implements ConsoleColors{
     	int improveRatio = 10-faction;//makes it so that enemies are a little better than players during current level if they spawn at the same time
     	if(Game.gameLevel <= 10) {
     		improveRatio = Game.gameLevel-faction; 
-    	}   	
-    	basehp = basehp + 3*improveRatio *( (int) Math.floor(numOfTrainingGrounds * 0.5) );
+    	}   
+    	int multiplierTG = 1;
+    	
+    	if (this.faction == Game.PLAYER_FACTION) {
+    		multiplierTG = (int) Math.floor(numOfTrainingGrounds * 0.5);
+    	}
+    	
+	   	basehp = basehp + 3*improveRatio *multiplierTG;
     	hp = basehp;
-    	atk += (int) 2.5*improveRatio *( (int) Math.floor(numOfTrainingGrounds * 0.5) );
-    	def += (int) 2.5*improveRatio*( (int) Math.floor(numOfTrainingGrounds * 0.5) );
+    	atk += (int) 3*improveRatio *multiplierTG;
+    	def += (int) 3*improveRatio*multiplierTG;	
+ 
     }
     
     public void getCost() {
@@ -157,9 +163,8 @@ public abstract class Unit extends Element implements ConsoleColors{
         int damage = (int) (this.atk);
         cible.hp -= damage;
         Game.updateBuilding(cible, Game.gameBuildings);
-    	Map.getMap();
     	if (damage>0) {
-			System.out.println(this.icon + " dealt " +RED+ damage + RESET+ " damage to" + cible.type + "!");
+			System.out.println(this.icon + " dealt " +RED+ damage + RESET+ " damage to " + cible.type + "!");
 			Game.wait(100);
 		}
         return damage;

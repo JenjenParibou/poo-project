@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Game implements ConsoleColors {
-	static public int gameLevel = 1;
+	static public int gameLevel = 1, endLevel = 8;
 	static public ArrayList<Batiment> gameBuildings = new ArrayList<Batiment>();//current buildings
 	static public ArrayList<Unit> playerUnits = new ArrayList<>();//player buildings
 	static public ArrayList<Unit> enemyUnits = new ArrayList<>();//enemy buildings
@@ -160,6 +160,9 @@ public class Game implements ConsoleColors {
 		Map.getTileFromCenter(x, y).placeElement(build, 1);
 		build.x = x;
 		build.y = y;
+		System.out.println(build.elementType + " " + Map.getTileFromCenter(x, y).getElement().elementType);
+		System.out.println(build.type + " " + Map.getTileFromCenter(x, y).getElement().type);
+
 		gameBuildings.add(build);
 		ressources.consume("Gold", build.cost);
 		Map.getMap();
@@ -214,6 +217,7 @@ public class Game implements ConsoleColors {
 		u.x = x;
 		u.y = y;
 		u.faction = faction;
+		
 		if(faction == PLAYER_FACTION) {
 			playerUnits.add(u);
 			Map.getMap();
@@ -366,22 +370,24 @@ public class Game implements ConsoleColors {
 			Game.addUnit("Soldier", 3, -Map.visibleGrid, ENEMY_FACTION);
 			break;
 		case 3:
+			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Soldier", -2, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Soldier", 2, -Map.visibleGrid, ENEMY_FACTION);
+
+			break;
+		case 4:
+			Game.addUnit("Soldier", -3, -Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Archer", 2, Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Soldier", 2, -Map.visibleGrid, ENEMY_FACTION);
 			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
 			break;
-		case 4:
-			Game.addUnit("Soldier", -4, -Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", 4, -Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Archer", 2, Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", 0, Map.visibleGrid, ENEMY_FACTION);
-			break;
 		case 5:
-			Game.addUnit("Eagle",Map.visibleGrid , -3, ENEMY_FACTION);
+			Game.addUnit("Eagle",Map.visibleGrid , -4, ENEMY_FACTION);
+			Game.addUnit("Soldier", Map.visibleGrid,-2, ENEMY_FACTION);
 			Game.addUnit("Eagle",-Map.visibleGrid , 3, ENEMY_FACTION);
 			Game.addUnit("Soldier", 1, -Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", -1, Map.visibleGrid, ENEMY_FACTION);
-			Game.addUnit("Soldier", 4, Map.visibleGrid, ENEMY_FACTION);
+			Game.addUnit("Archer", -1, -Map.visibleGrid, ENEMY_FACTION);
+			break;
 		case 6:
 			Game.addUnit("Archer",4, Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",Map.visibleGrid-1 , Map.visibleGrid , ENEMY_FACTION);
@@ -389,20 +395,151 @@ public class Game implements ConsoleColors {
 			Game.addUnit("Soldier",Map.visibleGrid-1 , -Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Soldier",-Map.visibleGrid+1, -Map.visibleGrid , ENEMY_FACTION);
 			Game.addUnit("Archer",-4, -Map.visibleGrid , ENEMY_FACTION);
-		default:
-			Game.addUnit("Archer",4, Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Soldier",-4 , Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Soldier",-Map.visibleGrid+1, Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Soldier",Map.visibleGrid-1 , -Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Soldier",-Map.visibleGrid+1, -Map.visibleGrid , ENEMY_FACTION);
-			Game.addUnit("Archer",-4, -Map.visibleGrid , ENEMY_FACTION);
+			break;
+		default:;
+			Game.addUnit("Soldier",Map.visibleGrid, 0 , ENEMY_FACTION);
+			Game.addUnit("Archer",-Map.visibleGrid, 0 , ENEMY_FACTION);
+			Game.addUnit("Archer",0, Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",0, -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Eagle",-3 , -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",3 , -Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Eagle",3 , Map.visibleGrid , ENEMY_FACTION);
+			Game.addUnit("Soldier",-3 , Map.visibleGrid , ENEMY_FACTION);
+			System.out.println(RED + "Final Wave." + RESET);
 			break;
 		}
 		
 		Map.getMap();
 	}
+	
+////////////////////// END OF TURN ACTIONS //////////////////////
 
 	
+ static public void turnActions(){
+	 	boolean playerElementDiedDuringThatTurn = false;//will be set to true if something if a building or player unit has died
+	 	playerElementDiedDuringThatTurn = deathBatiment(gameBuildings);//removes any buildings with 0 hp
+		 
+		 if(!Main.gameOver) {//only executes rest of commands if command center is still alive	
+			 if (playerElementDiedDuringThatTurn == false) {//makes sure the boolean if set to false if a building died but not a player
+				 playerElementDiedDuringThatTurn = deathUnit(playerUnits);
+			 } else
+				 deathUnit(playerUnits);
+			
+			 deathUnit(enemyUnits);
+			 
+			 HashMap<String, Integer> oldRessources= new HashMap<>();//to check wether resources will change this turn
+			 oldRessources.putAll(ressources.currentRessources);
+	
+			 if(!enemyUnits.isEmpty() && playerElementDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
+				 enemyMovement(enemyUnits.getFirst());	
+			 
+			 if(enemyUnits.isEmpty()) {//only generate ressources if no enemies
+				 for(Batiment i: gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
+					 if (i.buildTime>0) {
+					 System.out.println(RED + i.type + " is still under construction..."+RESET);
+					 i.buildTime--;
+					 }else {
+						 i.function(10);
+						 }
+				 }
+				 
+				 for (String i : ressources.currentRessources.keySet()) {//print resource value if it changed this turn
+					 if (ressources.currentRessources.get(i) > oldRessources.get(i)) {
+						 	int amount = ressources.currentRessources.get(i) - oldRessources.get(i);
+							System.out.println(YELLOW+"Generated " + amount + " " + i + "!"+RESET);
+					 }
+				 }
+			 }	  
+		 }
+	}
+	 
+	 
+	 
+	static boolean deathBatiment(ArrayList<Batiment> b) {
+		boolean buildingDied = false;
+		for(int i = b.size() - 1; i>= 0; i--) {
+			 if(b.get(i).hp <= 0) {
+				Map.getTileFromCenter(b.get(i).x, b.get(i).y).removeElement();
+				if (b.get(i).type == "Command Center") {//if the destroyed building was the command center, end game
+					Main.gameOver = true;
+					Map.getMap();
+					//System.out.println(RED + "THE COMMAND CENTER HAS BEEN DESTROYED" + RESET);
+					System.out.print("\n" + RED);
+					for (char c : "THE COMMAND CENTER HAS BEEN DESTROYED".toCharArray()) {
+					    System.out.print(c);
+					    wait(200);
+					}
+					
+					wait(2000);
+					System.out.print("\n" + RESET);
+					break;
+				}
+				System.out.print(b.get(i).icon + " has been destroyed." );
+				wait(100);
+			 	gameBuildings.remove(i);
+				buildingDied = true;
+			 }
+		 }
+		return buildingDied;
+	}
+	
+	
+	static boolean deathUnit(ArrayList<Unit> u) {
+		boolean unitDied = false;
+		for(int i = u.size() - 1; i>= 0; i--) {
+			 if(u.get(i).hp <= 0) {	 
+				Map.getTileFromCenter(u.get(i).x, u.get(i).y).removeElement();	
+			 	Map.getMap();
+			 	System.out.print(RESET + "\n");
+			 	System.out.print(u.get(i).icon + " has perished." );
+			 	wait(100);
+			 	u.remove(i);
+			 	unitDied = true;
+			 }
+		 }
+		return unitDied;
+	}
+	
+	
+	static void enemyMovement(Unit u) {
+		if (!attackUnits(u)) {//only move if no opposing units around you
+			boolean hasAttacked = false;
+			if (u.range != 1) { // if unit has a range above 1 square, try to find command center
+				if (Math.abs(u.x) - u.range <= 0 && Math.abs(u.y) - u.range <= 0) {//if centre de commande in range, attack it
+					u.Attacking((Batiment)Map.getTileFromCenter(0, 0).getElement());
+					hasAttacked = true;// won't move if it attacked command center
+				}
+			}
+			
+			if (!hasAttacked) {
+				int movX=0, movY=0;// by how much unit will move in x xor y
+				if (u.y<0) {
+					movY = 1;// move down if command center below you
+					// if tile below you has an enemy unit, don't move there, otherwise movY = 1			
+					}
+				else if (u.y>0) {
+					movY = -1;//move up if command center above you
+					}
+				else if (u.x <0) {
+					movX = 1;// if on the same row as command center, move towards it
+					}
+				else {
+					movX = -1;
+					}
+	
+					if (!Map.getTileFromCenter(u.x + movX, u.y + movY).isEmpty()) {//if the tile we wish to move to isn't empty (contains a building)
+							if (Map.getTileFromCenter(u.x+movX, u.y + movY).getElement().elementType == "Building") {
+								u.Attacking((Batiment)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement()); // we know it's a building because we used attackUnits earlier so we can use (Batiment)
+							} else {
+								enemyMovement((Unit)Map.getTileFromCenter(u.x+movX, u.y + movY).getElement());
+								}
+					} else {// tile is empty
+						u.moveTo(movX, movY);	
+						}	
+				}
+			}
+		}	
+		
 	
 	
 	
@@ -412,26 +549,33 @@ public class Game implements ConsoleColors {
 
 	static void levelIncrease() {
 		gameLevel++;
-		int numOfTrainingGrounds = 0;
-		for (Batiment i: gameBuildings) {
-			if (i.type == "Training Ground")
-				numOfTrainingGrounds++;
-		}
-		for (Unit i: playerUnits) {
-			i.train(numOfTrainingGrounds);	
-			i.hp = i.basehp;
-			if (numOfTrainingGrounds > 0) {
-				System.out.println(i.icon + " has trained! here are their stats: ");
-				i.showStats();
-				wait(100);
+		if (gameLevel == endLevel) {
+			System.out.println("You've conquered the enemy! Bask in golry as your kingdom remains undefeated for the rest of times!");
+			Main.gameOver = true;
+		} else {
+				
+			
+			int numOfTrainingGrounds = 0;
+			for (Batiment i: gameBuildings) {
+				if (i.type == "Training Ground")
+					numOfTrainingGrounds++;
+			}
+			for (Unit i: playerUnits) {
+				i.train(numOfTrainingGrounds);	
+				i.hp = i.basehp;
+				if (numOfTrainingGrounds > 0) {
+					System.out.println(i.icon + " has trained! here are their stats: ");
+					i.showStats();
+					wait(100);
+				}
+			}
+			if (gameLevel <= 12 && (gameLevel+1) % 2 == 0) {
+				Map.visibleGrid++;
+				System.out.println("Your influence grows, and with it, so does your territory:");
 			}
 		}
-		if (gameLevel <= 15 && (gameLevel+1) % 3 == 0) {
-			Map.visibleGrid++;
-			System.out.println("Your influence grows, and with it, so does your territory:");
-		}
-		
 	}
+	
 	
 	
 	

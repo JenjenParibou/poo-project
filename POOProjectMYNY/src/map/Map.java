@@ -77,8 +77,14 @@ public class Map implements ConsoleColors {
 				
 				if(onFogTile(i,j)) {color = ConsoleColors.PURPLE;}
 				if (Main.gameOver == true) {//makes map look completely purple with red icons if defeated
-					color = ConsoleColors.PURPLE;
-					iconToPrint = ConsoleColors.RED + iconToPrint + ConsoleColors.RESET;
+					if (Map.getTileFromCenter(0, 0).isEmpty()) {
+						color = ConsoleColors.PURPLE;
+						iconToPrint = ConsoleColors.RED + iconToPrint + ConsoleColors.RESET;
+					} else {
+						color = ConsoleColors.GREEN;
+						iconToPrint = ConsoleColors.GREEN + iconToPrint + ConsoleColors.RESET;
+					}
+					
 				}
 					
 				// colours edges of border purple (think of it as fog), this is where enemeies will spawn	

@@ -14,10 +14,12 @@ public class CommandCenter extends Generator {
 		this.y = 0;
 		this.cost= 999999;
 		this.buildTime= 0;
-		this.hp= 250;
+		this.hp= 200;
 		this.ressourceType= "Gold";
 		this.elementType = "Building";
 		this.icon = " " + icon + " ";
+		this.id = numOfBuildings;
+		numOfBuildings++;
 		}	    
 	public void function(int r){	
 		int numOfFinishedBuildings = 0;
