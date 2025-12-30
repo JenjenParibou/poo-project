@@ -13,7 +13,7 @@ public class Fish extends Unit {
         this.range = 4; //range is how many tiles the enemy has to be away to be attacked
         this.type = "Fish";
         this.elementType = "Unit";
-        this.aerial = true;//aerial troops can fly over water
+        this.aerial = false;//aerial troops can fly over water
         this.marine = true; 
         this.cost.put("Gold", 50);
         this.cost.put("Food", 50);

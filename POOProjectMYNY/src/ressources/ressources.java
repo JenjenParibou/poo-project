@@ -9,10 +9,10 @@ public class ressources implements ConsoleColors{
     static public HashMap<String, Integer> currentRessources= new HashMap<>();
 
     static public void addRessources() { // adds all ressources, put it at the start of main
-        currentRessources.put("Wood",40);
-        currentRessources.put("Stone",40);
-        currentRessources.put("Gold",100);
-        currentRessources.put("Food",40);
+        currentRessources.put("Wood",4000);
+        currentRessources.put("Stone",4000);
+        currentRessources.put("Gold",10000);
+        currentRessources.put("Food",4000);
           }
 
 //     Add a new ressource type

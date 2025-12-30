@@ -164,8 +164,8 @@ public class Game implements ConsoleColors {
 		Map.getTileFromCenter(x, y).placeElement(build, 1);
 		build.x = x;
 		build.y = y;
-		System.out.println(build.elementType + " " + Map.getTileFromCenter(x, y).getElement().elementType);
-		System.out.println(build.type + " " + Map.getTileFromCenter(x, y).getElement().type);
+		// System.out.println(build.elementType + " " + Map.getTileFromCenter(x, y).getElement().elementType);
+		// System.out.println(build.type + " " + Map.getTileFromCenter(x, y).getElement().type);
 
 		gameBuildings.add(build);
 		ressources.consume("Gold", build.cost);
@@ -260,7 +260,7 @@ public class Game implements ConsoleColors {
 	
 	static public boolean trainingCampExists() {
 		for (Batiment i: gameBuildings) {
-			if (i.type == "Training Ground" || i.buildTime <= 0) {
+			if (i.type == "Training Ground" && i.buildTime <= 0) {
 				return true;
 			}
 		}
