@@ -37,38 +37,27 @@ public class Main extends Game implements ConsoleColors {
 		switch (op) {
 		case 1:
 			game();
+			sc.close();
 			break;
 		case 2:
 			game();
+			sc.close();
 			break;
 		case 3:
 			print("See you later!");
+			sc.close();
 			System.exit(0); //ends 
 		}
 	}
 	
 	static public void game() { // aka this is where everything happens
 		Scanner sc = new Scanner(System.in);
-		
 		Map.generateMap();
 		print("And thus, your legend begins.");
-
 		ressources.addRessources();
-		//addUnit("Soldier", 2, -2, ENEMY_FACTION);
-//		addUnit("Soldier", -2, 1, PLAYER_FACTION);
-//		addUnit("Eagle",-2, Map.visibleGrid, ENEMY_FACTION);
-//		addBuilding("Quarry", -2, 1);
-		
-
-		Map.getMap();
-
-		
-		
+		Map.getMap();		
 		String commande;//the input from the player
 		boolean advancer;
-		
-		
-		
 
 		while (!gameOver) {
 			System.out.print("\n");
@@ -110,6 +99,7 @@ public class Main extends Game implements ConsoleColors {
 		
 		
 		System.out.println("And so ends your tale.\nGAME OVER");
+		sc.close();
 		System.exit(0); //ends 
 	}
 	
