@@ -40,7 +40,7 @@ public class Game implements ConsoleColors {
 			x = scanInt();
 			System.out.println("Y value of unit?");
 			y = scanInt();
-			System.out.println("Which unit to deploy? (Soldier, Archer, Eagle)" );
+			System.out.println("Which unit to deploy? (Soldier, Archer, Eagle, Fish, Giant)" );
 			String unit = sc.nextLine();
 			return addUnit(unit,x,y,PLAYER_FACTION);
 		case("b"):
