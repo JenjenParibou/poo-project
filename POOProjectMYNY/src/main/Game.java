@@ -352,7 +352,7 @@ public class Game implements ConsoleColors {
 		int damage = u.Attacking(u2);
 		if (damage>0) {
 			System.out.println(u.icon + " dealt " +RED+ damage + RESET+ " damage to " + u2.icon + "!");
-			Game.wait(100);
+			wait(100);
 		}
 		return true;
 	}
@@ -425,42 +425,43 @@ public class Game implements ConsoleColors {
 ////////////////////// END OF TURN ACTIONS //////////////////////
 
 	
- static public void turnActions(){
-	 	boolean playerElementDiedDuringThatTurn = false;//will be set to true if something if a building or player unit has died
-	 	playerElementDiedDuringThatTurn = deathBatiment(gameBuildings);//removes any buildings with 0 hp
-		 
-		 if(!Main.gameOver) {//only executes rest of commands if command center is still alive	
-			 if (playerElementDiedDuringThatTurn == false) {//makes sure the boolean if set to false if a building died but not a player
-				 playerElementDiedDuringThatTurn = deathUnit(playerUnits);
-			 } else
-				 deathUnit(playerUnits);
-			
-			 deathUnit(enemyUnits);
-			 
-			 HashMap<String, Integer> oldRessources= new HashMap<>();//to check wether resources will change this turn
-			 oldRessources.putAll(ressources.currentRessources);
-	
-			 if(!enemyUnits.isEmpty() && playerElementDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
-				 enemyMovement(enemyUnits.getFirst(), enemyUnits.getFirst().spd);	
-			 
-			 if(enemyUnits.isEmpty()) {//only generate ressources if no enemies
-				 for(Batiment i: gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
-					 if (i.buildTime>0) {
-					 System.out.println(RED + i.type + " is still under construction..."+RESET);
-					 i.buildTime--;
-					 }else {
-						 i.function(10);
-						 }
-				 }
-				 
-				 for (String i : ressources.currentRessources.keySet()) {//print resource value if it changed this turn
-					 if (ressources.currentRessources.get(i) > oldRessources.get(i)) {
-						 	int amount = ressources.currentRessources.get(i) - oldRessources.get(i);
-							System.out.println(YELLOW+"Generated " + amount + " " + i + "!"+RESET);
-					 }
-				 }
-			 }	  
-		 }
+	static public void turnActions(){
+		boolean playerElementDiedDuringThatTurn = false;//will be set to true if something if a building or player unit has died
+		playerElementDiedDuringThatTurn = deathBatiment(gameBuildings);//removes any buildings with 0 hp
+
+		if(!Main.gameOver) {//only executes rest of commands if command center is still alive	
+			if (playerElementDiedDuringThatTurn == false) {//makes sure the boolean if set to false if a building died but not a player
+				playerElementDiedDuringThatTurn = deathUnit(playerUnits);
+			} else {
+				deathUnit(playerUnits);
+			}
+			deathUnit(enemyUnits);
+
+			if(!enemyUnits.isEmpty() && playerElementDiedDuringThatTurn == false)//otherwise enemy would be able to move after killing unit
+				enemyMovement(enemyUnits.getFirst(), enemyUnits.getFirst().spd);	
+
+
+			if(enemyUnits.isEmpty()) {//only generate ressources if no enemies
+				HashMap<String, Integer> oldRessources= new HashMap<>();//to check whether resources will change this turn
+				oldRessources.putAll(ressources.currentRessources);
+				for(Batiment i: gameBuildings) {	//if building is built and a fight isn't happening, carry its function		 
+					if (i.buildTime>0) {
+						System.out.println(RED + i.type + " is still under construction..."+RESET);
+						i.buildTime--;
+					}else {
+						i.function(10);
+					}
+				}
+
+				for (String i : ressources.currentRessources.keySet()) {//print resource value if it changed this turn
+					if (ressources.currentRessources.get(i) > oldRessources.get(i)) {
+						int amount = ressources.currentRessources.get(i) - oldRessources.get(i);
+						System.out.println(YELLOW+"Generated " + amount + " " + i + "!"+RESET);
+					}
+				}
+				oldRessources.clear();
+			}	  
+		}
 	}
 	 
 	 
@@ -484,7 +485,8 @@ public class Game implements ConsoleColors {
 					System.out.print("\n" + RESET);
 					break;
 				}
-				System.out.print(b.get(i).icon + " has been destroyed." );
+			 	Map.getMap();
+				System.out.print("A " + b.get(i).type + " has been destroyed." );
 				wait(100);
 			 	gameBuildings.remove(i);
 				buildingDied = true;
@@ -527,8 +529,6 @@ public class Game implements ConsoleColors {
 					for(int i = speed; i>0; i--) {
 						if (u.y+ i <= 0) {
 							movY = i;
-							System.out.println(movY);
-
 							break;
 							}	
 						}
@@ -537,8 +537,6 @@ public class Game implements ConsoleColors {
 					for(int i = speed; i>0; i--) {
 						if (u.y- i >= 0) {
 							movY = -i;
-							System.out.println(movY);
-
 							break;
 							}					
 						}
@@ -547,7 +545,6 @@ public class Game implements ConsoleColors {
 					for(int i = speed; i>0; i--) {
 						if (u.x+ i <= 0) {
 							movX = i;
-							System.out.println(movX);
 							break;
 							}					
 						}
@@ -556,7 +553,6 @@ public class Game implements ConsoleColors {
 					for(int i = speed; i>0; i--) {
 						if (u.x- i >= 0) {
 							movX = -i;
-							System.out.println(movX);
 							break;
 							}					
 						}
@@ -615,7 +611,7 @@ public class Game implements ConsoleColors {
 		} else {
 			int numOfTrainingGrounds = 0;
 			for (Batiment i: gameBuildings) {
-				if (i.type == "Training Ground")
+				if (i.type == "Training Ground" && i.buildTime <= 0)
 					numOfTrainingGrounds++;
 			}
 			for (Unit i: playerUnits) {
@@ -646,6 +642,7 @@ public class Game implements ConsoleColors {
 	    catch(InterruptedException ex)
 	    {
 	        Thread.currentThread().interrupt();
+	        System.out.println("Thread has been interrupted");
 	    }
 	}
 
