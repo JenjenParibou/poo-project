@@ -627,7 +627,7 @@ public class Game implements ConsoleColors {
 					wait(100);
 				}
 			}
-			if (gameLevel <= 12 && (gameLevel+1) % 2 == 0) {
+			if (gameLevel <= 8 && ( gameLevel != 4 )) {
 				Map.visibleGrid++;
 				System.out.println("Your influence grows, and with it, so does your territory:");
 			}
