@@ -8,7 +8,7 @@ import main.Main;
 
 
 public class Map implements ConsoleColors {
-	static final int MAX_CASES = 25; // Must be an odd number
+	static final int MAX_CASES = 21; // Must be an odd number
 	static public final int CENTER = (MAX_CASES - 1) / 2; // or 26 in algorithmic language
 	static Terrain[][] Grid = new Terrain[MAX_CASES][MAX_CASES];// array[n*n] of Terrain
 	public static int visibleGrid = 3; // how many cells are visible around the center
