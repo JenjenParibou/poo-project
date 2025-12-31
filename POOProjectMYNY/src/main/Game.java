@@ -84,7 +84,7 @@ public class Game implements ConsoleColors {
 		case("stats unit"):
 		case("sunit"):
 		case("su"):
-			System.out.println("Please type out the id of your attacking unit.");
+			System.out.println("Please type out the id of the desired unit. (You can also view the stats of enemy units)");
 			id = scanInt();
 			u = findUnitThroughID(id,playerUnits);
 			if (u == null)
