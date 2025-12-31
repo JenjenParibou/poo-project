@@ -15,9 +15,7 @@ public class Map implements ConsoleColors {
 	// will grow every level to signify you taking areas
 
 	
-	static public Terrain getTileReal(int xPos, int yPos) { // use this to go through the array
-		return(Grid[xPos][yPos]);
-	}
+
 	
 	// ingame, the origin point of the map will be the center, so (0,0) ingame is equivalent to (25,25) in
 	// the array (as in, its center)
@@ -30,7 +28,7 @@ public class Map implements ConsoleColors {
 		for (int i = 0; i< MAX_CASES; i++) {
 			for (int j = 0; j< MAX_CASES; j++) {
 				Grid[i][j] = new Terrain(); //getTileReal didn't work here oddly
-				getTileReal(i,j).setTypeRandom();
+				Grid[i][j].setTypeRandom();
 			}
 		}
 		getTileFromCenter(0,0).setType("Grass");//Forcing type of center to "Grass"
@@ -70,23 +68,26 @@ public class Map implements ConsoleColors {
 		for (int i = westNorthLimit() ; i <= eastSouthLimit(); i++) { // "go from the upmost visible row to the downmost"
 			for (int j =  westNorthLimit(); j<=eastSouthLimit(); j++) {// "go from the leftmost visible column to the rightmost"
 				// Print( "[ " + Icon of current element + " ]") while also coloring the brackets depending on the type of terrain / if terrain is foggy
-				String color = getTileReal(i,j).color;
-				String iconToPrint = getTileReal(i,j).icon;
+				String color = Grid[i][j].color;
+				String iconToPrint = Grid[i][j].icon;
 				
-				if(onFogTile(i,j)) {color = ConsoleColors.PURPLE;}
+				if(onFogTile(i,j)) {
+					color = PURPLE;
+					}
+				
 				if (Main.gameOver == true) {//makes map look completely purple with red icons if defeated
 					if (Map.getTileFromCenter(0, 0).isEmpty()) {
-						color = ConsoleColors.PURPLE;
-						iconToPrint = ConsoleColors.RED + iconToPrint + ConsoleColors.RESET;
+						color = PURPLE;
+						iconToPrint = RED + iconToPrint + RESET;
 					} else {
-						color = ConsoleColors.GREEN;
-						iconToPrint = ConsoleColors.GREEN + iconToPrint + ConsoleColors.RESET;
+						color = GREEN;
+						iconToPrint = GREEN + iconToPrint + RESET;
 					}
 					
 				}
 					
 				// colours edges of border purple (think of it as fog), this is where enemeies will spawn	
-				System.out.print(color + "["+ ConsoleColors.RESET + iconToPrint + color +"]"+ ConsoleColors.RESET); 
+				System.out.print(color + "["+ RESET + iconToPrint + color +"]"+ RESET); 
 				// will print [ ICON ] for every tile, while coloring brackets according to "color"
 			}
 			System.out.print("\n"); //new line once we do every column of a row

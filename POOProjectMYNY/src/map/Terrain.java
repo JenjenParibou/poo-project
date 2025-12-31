@@ -1,9 +1,7 @@
 package map;
 import java.util.LinkedHashMap;
-
 import main.ConsoleColors;
 import main.Game;
-
 import java.util.ArrayList;
 
 
